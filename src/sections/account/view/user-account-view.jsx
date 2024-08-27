@@ -26,16 +26,16 @@ const TABS = [
     label: 'General',
     icon: <Iconify icon="solar:user-id-bold" width={24} />,
   },
-  {
-    value: 'billing',
-    label: 'Billing',
-    icon: <Iconify icon="solar:bill-list-bold" width={24} />,
-  },
-  {
-    value: 'notifications',
-    label: 'Notifications',
-    icon: <Iconify icon="solar:bell-bing-bold" width={24} />,
-  },
+  // {
+  //   value: 'billing',
+  //   label: 'Billing',
+  //   icon: <Iconify icon="solar:bill-list-bold" width={24} />,
+  // },
+  // {
+  //   value: 'notifications',
+  //   label: 'Notifications',
+  //   icon: <Iconify icon="solar:bell-bing-bold" width={24} />,
+  // },
   {
     value: 'social',
     label: 'Social links',
@@ -87,14 +87,14 @@ export default function AccountView() {
 
       {currentTab === 'general' && <AccountGeneral />}
 
-      {currentTab === 'billing' && (
+      {/* {currentTab === 'billing' && (
         <AccountBilling
           plans={_userPlans}
           cards={_userPayment}
           invoices={_userInvoices}
           addressBook={_userAddressBook}
         />
-      )}
+      )} */}
 
       {currentTab === 'notifications' && <AccountNotifications />}
 

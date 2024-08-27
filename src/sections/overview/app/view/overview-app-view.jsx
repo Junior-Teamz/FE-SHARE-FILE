@@ -36,22 +36,19 @@ export default function OverviewAppView() {
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={8}>
+        <Grid xs={12} md={14}>
           <AppWelcome
-            title={`Welcome back 👋 \n ${user?.displayName}`}
-            description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
+            title={`Welcome back 👋 ${user?.displayName}`}
+        
             img={<SeoIllustration />}
-            action={
-              <Button variant="contained" color="primary">
-                Go Now
-              </Button>
-            }
+         
+            
           />
         </Grid>
-
+{/* 
         <Grid xs={12} md={4}>
           <AppFeatured list={_appFeatured} />
-        </Grid>
+        </Grid> */}
 
         <Grid xs={12} md={4}>
           <AppWidgetSummary
@@ -153,7 +150,7 @@ export default function OverviewAppView() {
           />
         </Grid>
 
-        <Grid xs={12} lg={8}>
+        {/* <Grid xs={12} lg={8}>
           <AppNewInvoice
             title="New Invoice"
             tableData={_appInvoices}
@@ -177,9 +174,9 @@ export default function OverviewAppView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AppTopAuthors title="Top Authors" list={_appAuthors} />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={4}>
+        {/* <Grid xs={12} md={6} lg={4}>
           <Stack spacing={3}>
             <AppWidget
               title="Conversion"
@@ -200,7 +197,7 @@ export default function OverviewAppView() {
               }}
             />
           </Stack>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   );
