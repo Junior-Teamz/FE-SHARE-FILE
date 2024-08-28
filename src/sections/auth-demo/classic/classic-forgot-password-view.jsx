@@ -61,7 +61,7 @@ export default function ClassicForgotPasswordView() {
 
       <Link
         component={RouterLink}
-        href={paths.authDemo.classic.login}
+        href="/auth/jwt/login"
         color="inherit"
         variant="subtitle2"
         sx={{

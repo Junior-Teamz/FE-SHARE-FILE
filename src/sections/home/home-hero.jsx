@@ -22,6 +22,7 @@ import { HEADER } from 'src/layouts/config-layout';
 import Iconify from 'src/components/iconify';
 import { RouterLink } from 'src/routes/components';
 import { MotionContainer, varFade } from 'src/components/animate';
+import PeopleIcon from '@mui/icons-material/People';
 
 // ----------------------------------------------------------------------
 
@@ -50,9 +51,7 @@ const StyledWrapper = styled('div')(({ theme }) => ({
 }));
 
 const StyledTextGradient = styled(m.h1)(({ theme }) => ({
-  ...textGradient(
-    `300deg, #7CFC00 0%, #008080 25%, #7CFC00 50%, #008080 75%, #7CFC00 100%`
-  ),
+  ...textGradient(`300deg, #7CFC00 0%, #008080 25%, #7CFC00 50%, #008080 75%, #7CFC00 100%`),
   padding: 0,
   marginTop: 8,
   lineHeight: 1,
@@ -66,7 +65,6 @@ const StyledTextGradient = styled(m.h1)(({ theme }) => ({
     fontSize: `${96 / 16}rem`,
   },
 }));
-
 
 const StyledEllipseTop = styled('div')(({ theme }) => ({
   top: -80,
@@ -176,9 +174,7 @@ export default function HomeHero() {
         },
       }}
     >
-    
-
-      <m.div sx={{ mt:'20px' }} variants={varFade().in}>
+      <m.div sx={{ mt: '20px' }} variants={varFade().in}>
         <StyledTextGradient
           animate={{ backgroundPosition: '200% center' }}
           transition={{
@@ -194,7 +190,8 @@ export default function HomeHero() {
 
       <m.div variants={varFade().in}>
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
-         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi fuga laudantium velit minus, neque sit!
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi fuga laudantium velit
+          minus, neque sit!
         </Typography>
       </m.div>
 
@@ -222,10 +219,10 @@ export default function HomeHero() {
             <Button
               component={RouterLink}
               href={paths.about}
-              color="inherit"
               size="large"
               variant="contained"
-              startIcon={<Iconify icon="eva:flash-fill" width={24} />}
+              color="primary"
+              startIcon={<PeopleIcon fontSize="medium" />}
             >
               About Us
             </Button>
@@ -292,33 +289,25 @@ export default function HomeHero() {
         height: '150%',
         position: 'absolute',
         opacity: opacity > 0 ? opacity : 0,
-        transform: `skew(${-16 - percent / 24}deg, ${4 - percent / 16}deg)`,
-        ...(theme.direction === 'rtl' && {
-          transform: `skew(${16 + percent / 24}deg, ${4 + percent / 16}deg)`,
-        }),
+        mt: {
+          md: `-${HEADER.H_DESKTOP + percent * 2.5}px`,
+        },
       }}
     >
       <Stack
         component={m.div}
         variants={varFade().in}
         sx={{
-          width: 344,
+          width: 500,
           position: 'relative',
         }}
       >
         <Box
           component={m.img}
-          animate={{ y: ['0%', '100%'] }}
-          transition={transition}
-          alt={isLight ? 'light_1' : 'dark_1'}
-          src={
-            isLight
-              ? `/assets/images/home/hero/light_1.webp`
-              : `/assets/images/home/hero/dark_1.webp`
-          }
-          sx={{ position: 'absolute', mt: -5 }}
+          src={`/assets/images/home/hero/Logo.png`}
+          sx={{ position: 'absolute', mt:10 }}
         />
-        <Box
+        {/* <Box
           component={m.img}
           animate={{ y: ['-100%', '0%'] }}
           transition={transition}
@@ -360,7 +349,7 @@ export default function HomeHero() {
               : `/assets/images/home/hero/dark_2.webp`
           }
           sx={{ position: 'absolute' }}
-        />
+        /> */}
       </Stack>
     </Stack>
   );
