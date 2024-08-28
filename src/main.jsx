@@ -6,7 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
+//render all application
 root.render(
   <HelmetProvider>
     <BrowserRouter>
