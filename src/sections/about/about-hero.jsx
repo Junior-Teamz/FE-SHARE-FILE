@@ -35,13 +35,9 @@ export default function AboutHero() {
             },
           }}
         >
-          <TextAnimate text="About" variants={varFade().inRight} sx={{ color: 'primary.main' }} />
-
-          <br />
-
           <Stack spacing={2} display="inline-flex" direction="row" sx={{ color: 'common.white' }}>
+            <TextAnimate text="About" variants={varFade().inRight} sx={{ color: 'primary.main' }} />
             <TextAnimate text="Us" />
-        
           </Stack>
 
           <m.div variants={varFade().inRight}>
