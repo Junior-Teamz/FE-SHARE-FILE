@@ -27,7 +27,6 @@ import FormProvider, { RHFTextField, RHFSwitch } from 'src/components/hook-form'
 
 export default function CalendarForm({ currentEvent, colorOptions, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
-
   const EventSchema = Yup.object().shape({
     title: Yup.string().max(255).required('Title is required'),
     description: Yup.string().max(5000, 'Description must be at most 5000 characters'),

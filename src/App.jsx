@@ -41,6 +41,7 @@ import { SettingsProvider, SettingsDrawer } from 'src/components/settings';
 import { CheckoutProvider } from 'src/sections/checkout/context';
 // auth
 import { AuthProvider, AuthConsumer } from 'src/auth/context/jwt';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // import { AuthProvider, AuthConsumer } from 'src/auth/context/auth0';
 // import { AuthProvider, AuthConsumer } from 'src/auth/context/amplify';
 // import { AuthProvider, AuthConsumer } from 'src/auth/context/firebase';
@@ -62,34 +63,38 @@ export default function App() {
 
   useScrollToTop();
 
+  const queryClient = new QueryClient();
+
   return (
-    <AuthProvider>
-      <LocalizationProvider>
-        <SettingsProvider
-          defaultSettings={{
-            themeMode: 'light', // 'light' | 'dark'
-            themeDirection: 'ltr', //  'rtl' | 'ltr'
-            themeContrast: 'default', // 'default' | 'bold'
-            themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
-            themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
-            themeStretch: false,
-          }}
-        >
-          <ThemeProvider>
-            <MotionLazy>
-              <SnackbarProvider>
-                <CheckoutProvider>
-                  <SettingsDrawer />
-                  <ProgressBar />
-                  <AuthConsumer>
-                    <Router />
-                  </AuthConsumer>
-                </CheckoutProvider>
-              </SnackbarProvider>
-            </MotionLazy>
-          </ThemeProvider>
-        </SettingsProvider>
-      </LocalizationProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <LocalizationProvider>
+          <SettingsProvider
+            defaultSettings={{
+              themeMode: 'light', // 'light' | 'dark'
+              themeDirection: 'ltr', //  'rtl' | 'ltr'
+              themeContrast: 'default', // 'default' | 'bold'
+              themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
+              themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+              themeStretch: false,
+            }}
+          >
+            <ThemeProvider>
+              <MotionLazy>
+                <SnackbarProvider>
+                  <CheckoutProvider>
+                    <SettingsDrawer />
+                    <ProgressBar />
+                    <AuthConsumer>
+                      <Router />
+                    </AuthConsumer>
+                  </CheckoutProvider>
+                </SnackbarProvider>
+              </MotionLazy>
+            </ThemeProvider>
+          </SettingsProvider>
+        </LocalizationProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }

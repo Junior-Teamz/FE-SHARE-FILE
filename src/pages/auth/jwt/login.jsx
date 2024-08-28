@@ -8,7 +8,7 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Jwt: Login</title>
+        <title>Login To File Sharing KemenkopUKM</title>
       </Helmet>
 
       <JwtLoginView />

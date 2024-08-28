@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import { RouterLink } from 'src/routes/components';
-import kemen from '../../../public/logo/kemen.jpeg';
+import kemen from '../../../public/logo/kemen1.png';
 
 const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
   const theme = useTheme();

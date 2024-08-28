@@ -25,6 +25,8 @@ import FileManagerFilters from '../file-manager-filters';
 import FileManagerGridView from '../file-manager-grid-view';
 import FileManagerFiltersResult from '../file-manager-filters-result';
 import FileManagerNewFolderDialog from '../file-manager-new-folder-dialog';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -106,7 +108,7 @@ export default function FileManagerView() {
   const handleDeleteItems = useCallback(() => {
     const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
     setTableData(deleteRows);
- 
+
     table.onUpdatePageDeleteRows({
       totalRows: tableData.length,
       totalRowsInPage: dataInPage.length,
@@ -159,6 +161,16 @@ export default function FileManagerView() {
       results={dataFiltered.length}
     />
   );
+
+  const { data } = useQuery({
+    queryKey: ['fileManager'],
+    queryFn: async () => {
+      const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
+      return response.data;
+    },
+  });
+
+  console.log(data);
 
   return (
     <>
