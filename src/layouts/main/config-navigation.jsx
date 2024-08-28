@@ -5,6 +5,8 @@ import { PATH_AFTER_LOGIN } from 'src/config-global';
 // components
 import Iconify from 'src/components/iconify';
 import LoginIcon from '@mui/icons-material/Login';
+import PeopleIcon from '@mui/icons-material/People';
+import { useResponsive } from 'src/hooks/use-responsive';
 
 // ----------------------------------------------------------------------
 
@@ -16,31 +18,35 @@ export const navConfig = [
   },
   {
     title: 'Login',
-    icon: <LoginIcon fontSize='small' icon="solar:home-2-bold-duotone" />,
+    icon: <LoginIcon fontSize="small" icon="solar:home-2-bold-duotone" />,
     path: '/auth/jwt/login',
+  },
+  {
+    title: 'About us',
+    icon: <PeopleIcon fontSize='small' />,
+    path: paths.about,
   },
   // {
   //   title: 'Components',
   //   icon: <Iconify icon="solar:atom-bold-duotone" />,
   //   path: paths.components,
   // },
-  {
-    title: 'Pages',
-    path: '/pages',
-    icon: <Iconify icon="solar:file-bold-duotone" />,
-    children: [
-      {
-        subheader: 'Other',
-        items: [
-          { title: 'About us', path: paths.about },
-          { title: 'Contact us', path: paths.contact },
-          { title: 'FAQs', path: paths.faqs },
-          // { title: 'Pricing', path: paths.pricing },
-          // { title: 'Payment', path: paths.payment },
-          // { title: 'Maintenance', path: paths.maintenance },
-          // { title: 'Coming Soon', path: paths.comingSoon },
-        ],
-      },
+  // {
+  //   title: 'Pages',
+  //   path: '/pages',
+  //   icon: <Iconify icon="solar:file-bold-duotone" />,
+  //   children: [
+  //     {
+  //       subheader: 'Other',
+  //       items: [
+  //         { title: 'Contact us', path: paths.contact },
+  //         { title: 'FAQs', path: paths.faqs },
+  //         // { title: 'Pricing', path: paths.pricing },
+  //         // { title: 'Payment', path: paths.payment },
+  //         // { title: 'Maintenance', path: paths.maintenance },
+  //         // { title: 'Coming Soon', path: paths.comingSoon },
+  //       ],
+  //     },
       // {
       //   subheader: 'Concepts',
       //   items: [
@@ -87,8 +93,8 @@ export const navConfig = [
       //   subheader: 'Dashboard',
       //   items: [{ title: 'Dashboard', path: PATH_AFTER_LOGIN }],
       // },
-    ],
-  },
+  //   ],
+  // },
   // {
   //   title: 'Docs',
   //   icon: <Iconify icon="solar:notebook-bold-duotone" />,

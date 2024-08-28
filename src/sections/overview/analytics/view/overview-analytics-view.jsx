@@ -164,7 +164,7 @@ export default function OverviewAnalyticsView() {
             }}
           />
         </Grid>
-
+{/* 
         <Grid xs={12} md={6} lg={8}>
           <AnalyticsNews title="News" list={_analyticPosts} />
         </Grid>
@@ -175,11 +175,11 @@ export default function OverviewAnalyticsView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AnalyticsTrafficBySite title="Traffic by Site" list={_analyticTraffic} />
-        </Grid>
-
+        </Grid> */}
+{/* 
         <Grid xs={12} md={6} lg={8}>
           <AnalyticsTasks title="Tasks" list={_analyticTasks} />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   );

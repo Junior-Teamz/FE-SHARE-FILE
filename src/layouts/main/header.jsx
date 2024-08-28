@@ -81,7 +81,7 @@ export default function Header() {
           {mdUp && <NavDesktop offsetTop={offsetTop} data={navConfig} />}
 
           <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }}>
-            {mdUp && <LoginButton />}
+            {/* {mdUp && <LoginButton />} */}
 
             <SettingsButton
               sx={{
