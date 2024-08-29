@@ -4,7 +4,6 @@ import { useEffect, useReducer, useCallback, useMemo } from 'react';
 import axios, { endpoints } from 'src/utils/axios';
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
-
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -42,8 +41,7 @@ export function AuthProvider({ children }) {
         setSession(accessToken); // Set token in session and axios headers
 
         const response = await axios.get(endpoints.auth.me);
-
-        const { user } = response.data;
+        const { data: user } = response.data;
 
         dispatch({
           type: 'INITIAL',
@@ -67,9 +65,8 @@ export function AuthProvider({ children }) {
     const data = { email, password };
 
     const response = await axios.post(endpoints.auth.login, data);
-
+    console.log(response);
     const { accessToken, user } = response.data;
-
     setSession(accessToken); // Set session and add token to axios headers
 
     dispatch({ type: 'LOGIN', payload: { user } });
@@ -98,16 +95,19 @@ export function AuthProvider({ children }) {
   const checkAuthenticated = state.user ? 'authenticated' : 'unauthenticated';
   const status = state.loading ? 'loading' : checkAuthenticated;
 
-  const memoizedValue = useMemo(() => ({
-    user: state.user,
-    method: 'jwt',
-    loading: status === 'loading',
-    authenticated: status === 'authenticated',
-    unauthenticated: status === 'unauthenticated',
-    login,
-    register,
-    logout,
-  }), [login, logout, register, state.user, status]);
+  const memoizedValue = useMemo(
+    () => ({
+      user: state.user,
+      method: 'jwt',
+      loading: status === 'loading',
+      authenticated: status === 'authenticated',
+      unauthenticated: status === 'unauthenticated',
+      login,
+      register,
+      logout,
+    }),
+    [login, logout, register, state.user, status]
+  );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
 }

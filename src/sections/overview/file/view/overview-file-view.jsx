@@ -122,7 +122,7 @@ export default function OverviewFileView() {
 
           <Grid xs={12} sm={6} md={4}>
             <FileWidget
-              title="Dropbox"
+              title="Muhammad Hafidz"
               value={GB / 10}
               total={GB}
               icon="/assets/icons/app/ic_dropbox.svg"
