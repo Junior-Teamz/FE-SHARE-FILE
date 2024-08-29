@@ -1,36 +1,22 @@
-// @mui
+import { useContext } from 'react'; // Tambahkan import useContext
 import { useTheme } from '@mui/material/styles';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
-// hooks
-import { useMockedUser } from 'src/hooks/use-mocked-user';
-// _mock
-import { _appFeatured, _appAuthors, _appInstalled, _appRelated, _appInvoices } from 'src/_mock';
-// components
+
+// hooks dan komponen lainnya
 import { useSettingsContext } from 'src/components/settings';
-// assets
+import { AuthContext } from 'src/auth/context/jwt/auth-context'; // Import AuthContext
 import { SeoIllustration } from 'src/assets/illustrations';
-//
-import AppWidget from '../app-widget';
-import AppWelcome from '../app-welcome';
-import AppFeatured from '../app-featured';
-import AppNewInvoice from '../app-new-invoice';
-import AppTopAuthors from '../app-top-authors';
-import AppTopRelated from '../app-top-related';
-import AppAreaInstalled from '../app-area-installed';
 import AppWidgetSummary from '../app-widget-summary';
 import AppCurrentDownload from '../app-current-download';
-import AppTopInstalledCountries from '../app-top-installed-countries';
+import AppAreaInstalled from '../app-area-installed';
+import AppWelcome from '../app-welcome';
 
 // ----------------------------------------------------------------------
 
 export default function OverviewAppView() {
-  const { user } = useMockedUser();
-
+  const { user } = useContext(AuthContext); // Mengambil data pengguna dari AuthContext
   const theme = useTheme();
-
   const settings = useSettingsContext();
 
   return (
@@ -38,17 +24,10 @@ export default function OverviewAppView() {
       <Grid container spacing={3}>
         <Grid xs={12} md={14}>
           <AppWelcome
-            title={`Welcome back 👋 ${user?.displayName}`}
-        
+            title={`Welcome back 👋 ${user?.name}`} // Menggunakan user?.name dari AuthContext
             img={<SeoIllustration />}
-         
-            
           />
         </Grid>
-{/* 
-        <Grid xs={12} md={4}>
-          <AppFeatured list={_appFeatured} />
-        </Grid> */}
 
         <Grid xs={12} md={4}>
           <AppWidgetSummary
@@ -105,18 +84,8 @@ export default function OverviewAppView() {
             subheader="(+43%) than last year"
             chart={{
               categories: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec',
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
               ],
               series: [
                 {
@@ -149,55 +118,6 @@ export default function OverviewAppView() {
             }}
           />
         </Grid>
-
-        {/* <Grid xs={12} lg={8}>
-          <AppNewInvoice
-            title="New Invoice"
-            tableData={_appInvoices}
-            tableLabels={[
-              { id: 'id', label: 'Invoice ID' },
-              { id: 'category', label: 'Category' },
-              { id: 'price', label: 'Price' },
-              { id: 'status', label: 'Status' },
-              { id: '' },
-            ]}
-          />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
-          <AppTopRelated title="Top Related Applications" list={_appRelated} />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
-          <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
-          <AppTopAuthors title="Top Authors" list={_appAuthors} />
-        </Grid> */}
-
-        {/* <Grid xs={12} md={6} lg={4}>
-          <Stack spacing={3}>
-            <AppWidget
-              title="Conversion"
-              total={38566}
-              icon="solar:user-rounded-bold"
-              chart={{
-                series: 48,
-              }}
-            />
-
-            <AppWidget
-              title="Applications"
-              total={55566}
-              icon="fluent:mail-24-filled"
-              color="info"
-              chart={{
-                series: 75,
-              }}
-            />
-          </Stack>
-        </Grid> */}
       </Grid>
     </Container>
   );
