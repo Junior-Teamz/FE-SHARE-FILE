@@ -4,7 +4,7 @@ import { HOST_API } from 'src/config-global';
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: HOST_API, withCredentials : false, });
+const axiosInstance = axios.create({ baseURL: HOST_API, withCredentials: true });
 
 axiosInstance.interceptors.response.use(
   (res) => res,

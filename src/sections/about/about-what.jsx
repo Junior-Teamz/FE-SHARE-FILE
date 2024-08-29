@@ -74,13 +74,13 @@ export default function AboutWhat() {
         )}
 
         <Grid xs={12} md={6} lg={5}>
-          <m.div variants={varFade().inRight}>
+          <m.div variants={varFade().inUp}>
             <Typography variant="h2" sx={{ mb: 3 }}>
               Apa Itu File Sharing?
             </Typography>
           </m.div>
 
-          <m.div variants={varFade().inRight}>
+          <m.div variants={varFade().inUp}>
             <Typography
               sx={{
                 color: theme.palette.mode === 'light' ? 'text.secondary' : 'common.white',
