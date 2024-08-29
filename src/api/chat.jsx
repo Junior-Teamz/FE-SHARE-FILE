@@ -4,7 +4,7 @@ import useSWR, { mutate } from 'swr';
 // utils
 import axios, { endpoints, fetcher } from 'src/utils/axios';
 
-// ----------------------------------------------------------------------
+// ---------------------------------------------------------------------
 
 const options = {
   revalidateIfStale: false,

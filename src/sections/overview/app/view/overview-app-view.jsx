@@ -39,13 +39,13 @@ export default function OverviewAppView() {
         <Grid xs={12} md={14}>
           <AppWelcome
             title={`Welcome back 👋 ${user?.displayName}`}
-        
+
             img={<SeoIllustration />}
-         
-            
+
+
           />
         </Grid>
-{/* 
+{/*
         <Grid xs={12} md={4}>
           <AppFeatured list={_appFeatured} />
         </Grid> */}
@@ -63,7 +63,7 @@ export default function OverviewAppView() {
 
         <Grid xs={12} md={4}>
           <AppWidgetSummary
-            title="Total Installed"
+            title="Total File Di Upload"
             percent={0.2}
             total={4876}
             chart={{

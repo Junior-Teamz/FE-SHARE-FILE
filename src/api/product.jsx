@@ -20,7 +20,6 @@ export function useGetProducts() {
     }),
     [data?.products, error, isLoading, isValidating]
   );
-
   return memoizedValue;
 }
 
@@ -48,7 +47,6 @@ export function useGetProduct(productId) {
 
 export function useSearchProducts(query) {
   const URL = query ? [endpoints.product.search, { params: { query } }] : null;
-
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, {
     keepPreviousData: true,
   });

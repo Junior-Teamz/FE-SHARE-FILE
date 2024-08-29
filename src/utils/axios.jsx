@@ -4,7 +4,7 @@ import { HOST_API } from 'src/config-global';
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: HOST_API });
+const axiosInstance = axios.create({ baseURL: HOST_API, withCredentials : false, });
 
 axiosInstance.interceptors.response.use(
   (res) => res,
@@ -31,7 +31,7 @@ export const endpoints = {
   calendar: '/api/calendar',
   auth: {
     me: '/api/auth/me',
-    login: '/api/login',
+    login: '/api/auth/login',
     register: '/api/auth/register',
   },
   mail: {

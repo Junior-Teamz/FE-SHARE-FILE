@@ -10,7 +10,7 @@ export default function FileManagerPage() {
       <Helmet>
         <title> Dashboard: File Manager</title>
       </Helmet>
-
+    
       <FileManagerView />
     </>
   );
