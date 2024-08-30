@@ -15,11 +15,11 @@ import { RouterLink } from 'src/routes/components';
 import { _socials } from 'src/_mock';
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
-import Kemen from '../../../public/logo/kemen1.png';
+import Kemen from '../../../public/logo/kemen2.png';
 
 const LINKS = [
   {
-    headline: 'Minimal',
+    headline: 'FILE SHARING',
     children: [
       { name: 'About us', href: paths.about },
       { name: 'Contact us', href: paths.contact },
@@ -27,14 +27,14 @@ const LINKS = [
     ],
   },
   {
-    headline: 'Legal',
+    headline: 'LEGAL',
     children: [
       { name: 'Terms and Condition', href: '#' },
       { name: 'Privacy Policy', href: '#' },
     ],
   },
   {
-    headline: 'Contact',
+    headline: 'CONTACT',
     children: [{ name: 'kemenkop@gmail.com', href: '#' }],
   },
 ];
@@ -50,6 +50,7 @@ export default function Footer() {
         position: 'relative',
         bgcolor: 'background.default',
         mt: 3,
+        width: '100%',
       }}
     >
       <Divider />
@@ -61,15 +62,20 @@ export default function Footer() {
           textAlign: { xs: 'center', md: 'unset' },
         }}
       >
-        <Typography
-          variant="h6"
+        <Box
+          component="img"
+          src={Kemen}
+          alt="Kemenkop"
           sx={{
-            mb: 4,
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: { xs: 'center', lg: 'flex-start' },
-            textAlign: { xs: 'center', lg: 'left' },
+            width: { xs: 200, md: 300 }, // Lebar maksimum untuk responsivitas
+            maxWidth: '100%', // Menjaga agar lebar tidak melebihi kontainer
+            height: 'auto', // Agar proporsional
+            objectFit: 'contain', // Menjaga gambar tetap dalam batas tanpa dipotong
+            mx: { xs: 'auto', md: 0 }, // Memastikan logo terpusat di perangkat kecil
+            mt: -16,
+            mb: { xs: -8, md: -12 }, // Jarak bawah untuk responsivitas
           }}
+<<<<<<< HEAD
           color="text.secondary"
         >
           <Box
@@ -80,15 +86,23 @@ export default function Footer() {
           />
           FILE SHARING | KEMENKOPUKM
         </Typography>
+=======
+        />
+>>>>>>> 6a0764a220ece4a6ea256c02e584897bb3063023
 
         <Grid
           container
+          spacing={3}
           justifyContent={{
             xs: 'center',
             md: 'space-between',
           }}
         >
-          <Grid xs={12} md={3} sx={{ textAlign: { xs: 'center', md: 'left' } }}>
+          <Grid
+            xs={12}
+            md={3}
+            sx={{ textAlign: { xs: 'center', md: 'left' }, mb: { xs: 3, md: 0 } }}
+          >
             <Typography
               variant="body2"
               sx={{
@@ -124,7 +138,11 @@ export default function Footer() {
           </Grid>
 
           <Grid xs={12} md={6}>
-            <Stack spacing={5} direction={{ xs: 'column', md: 'row' }}>
+            <Stack
+              spacing={5}
+              direction={{ xs: 'column', md: 'row' }}
+              alignItems={{ xs: 'center', md: 'flex-start' }}
+            >
               {LINKS.map((list) => (
                 <Stack
                   key={list.headline}
@@ -153,8 +171,8 @@ export default function Footer() {
           </Grid>
         </Grid>
 
-        <Typography variant="body2" sx={{ mt: 10, textAlign: 'center' }}>
-          © 2024. All rights reserved
+        <Typography variant="body2" sx={{ mt: 5, textAlign: 'center' }}>
+          Copyright © 2024. Hak Cipta Dilindungi. Kementerian Koperasi dan UKM
         </Typography>
       </Container>
     </Box>

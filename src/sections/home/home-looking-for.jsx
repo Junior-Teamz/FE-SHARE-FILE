@@ -2,17 +2,11 @@ import { useState } from 'react';
 import { m } from 'framer-motion';
 // @mui
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
-import Modal from '@mui/material/Modal';
-
-// hooks
-import { useResponsive } from 'src/hooks/use-responsive';
-// routes
-import { paths } from 'src/routes/paths';
-// components
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import InfoIcon from '@mui/icons-material/Info';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { MotionViewport, varFade } from 'src/components/animate';
@@ -20,17 +14,18 @@ import { MotionViewport, varFade } from 'src/components/animate';
 // ----------------------------------------------------------------------
 
 export default function HomeLookingFor() {
-  const mdUp = useResponsive('up', 'md');
-  const [openModal, setOpenModal] = useState(false);
   const [pdfToShow, setPdfToShow] = useState(null);
 
   const handleCardClick = (label) => {
     if (label.includes('Permen PANRB') || label.includes('Permen KOPUKM')) {
       setPdfToShow(label === 'Permen PANRB No. 43 Tahun 2022' ? 'Spppd.pdf' : 'kopukm.pdf');
-      setOpenModal(true);
     } else {
       window.location.href = paths.informasi; // Navigates to the "Informasi & Pengumuman" page
     }
+  };
+
+  const handleClose = () => {
+    setPdfToShow(null);
   };
 
   const cards = [
@@ -46,7 +41,7 @@ export default function HomeLookingFor() {
         py: { xs: 10, md: 15 },
       }}
     >
-      <Grid container spacing={3}>
+      <Grid container spacing={4}>
         {/* Top Grid: Pengumuman & Informasi */}
         <Grid xs={12}>
           <m.div variants={varFade().inUp}>
@@ -56,12 +51,11 @@ export default function HomeLookingFor() {
               spacing={2}
               onClick={() => handleCardClick(cards[0].label)}
               sx={{
-                p: 4, // Increased padding for larger card size
+                p: 4,
                 borderRadius: 2,
                 backgroundColor: 'primary.main',
                 color: 'common.white',
                 textAlign: 'center',
-                height: '100%',
                 cursor: 'pointer',
                 transition: 'transform 0.3s ease-in-out, backgroundColor 0.3s ease-in-out',
                 '&:hover': {
@@ -71,7 +65,7 @@ export default function HomeLookingFor() {
               }}
             >
               {cards[0].icon} {/* Render the icon */}
-              <Typography variant="h5">{cards[0].label}</Typography> {/* Larger font size */}
+              <Typography variant="h5">{cards[0].label}</Typography>
             </Stack>
           </m.div>
         </Grid>
@@ -86,12 +80,11 @@ export default function HomeLookingFor() {
                 spacing={2}
                 onClick={() => handleCardClick(card.label)}
                 sx={{
-                  p: 4, // Increased padding for larger card size
+                  p: 4,
                   borderRadius: 2,
                   backgroundColor: 'primary.main',
                   color: 'common.white',
                   textAlign: 'center',
-                  height: '100%',
                   cursor: 'pointer',
                   transition: 'transform 0.3s ease-in-out, backgroundColor 0.3s ease-in-out',
                   '&:hover': {
@@ -106,40 +99,49 @@ export default function HomeLookingFor() {
             </m.div>
           </Grid>
         ))}
+
+        {/* PDF Preview Display */}
+        {pdfToShow && (
+          <Grid xs={12} md={12}>
+            <div
+              style={{
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: '16px',
+                padding: '0 16px',
+              }}
+            >
+              {/* Close Button */}
+              <IconButton
+                onClick={handleClose}
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  right: 8,
+                  zIndex: 1,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                  },
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+
+              <iframe
+                src={`/assets/pdf/${pdfToShow}`}
+                width="100%"
+                height="600px"
+                style={{ border: '10px' }}
+                title="PDF Preview"
+              />
+            </div>
+          </Grid>
+        )}
       </Grid>
-
-      <Modal open={openModal} onClose={() => setOpenModal(false)}>
-        <Stack
-          alignItems="center"
-          justifyContent="center"
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-            width: { xs: '90%', md: '70%', lg: '60%' }, // Responsive modal width
-            maxHeight: '90vh',
-            overflowY: 'auto',
-          }}
-        >
-          <Typography variant="h6">PDF Preview: {pdfToShow}</Typography>
-          <iframe
-            loading="lazy"
-            src={`/assets/pdf/${pdfToShow}`}
-            width="100%"
-            height={mdUp ? '600px' : '400px'} // Reduced height on mobile
-            style={{ border: 'none' }}
-          />
-
-          <Button onClick={() => setOpenModal(false)} variant="contained" sx={{ mt: 2 }}>
-            Close
-          </Button>
-        </Stack>
-      </Modal>
     </Container>
   );
 }

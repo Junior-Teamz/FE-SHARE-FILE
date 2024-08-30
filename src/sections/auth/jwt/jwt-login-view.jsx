@@ -68,6 +68,7 @@ export default function JwtLoginView() {
       enqueueSnackbar('Login Berhasil!');
     } catch (error) {
       console.error(error);
+      enqueueSnackbar('Tidak bisa login!', { variant: 'error' });
       reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
     }
