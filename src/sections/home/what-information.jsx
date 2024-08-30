@@ -38,41 +38,16 @@ export default function InformationAndAnnouncements() {
       }}
     >
       {/* Grid untuk Informasi */}
-      <Grid container columnSpacing={{ md: 3 }} alignItems="flex-start" sx={{ mb: 5 }}>
-        {mdUp && (
-          <Grid container xs={12} md={6} lg={7} alignItems="center" sx={{ pr: { md: 7 } }}>
-            <Grid xs={6}>
-              <m.div variants={varFade().inUp}>
-                <Image
-                  alt="our office 2"
-                  src="/assets/images/about/share2.jpeg"
-                  ratio="1/1"
-                  sx={{ borderRadius: 3, boxShadow: shadow }}
-                />
-              </m.div>
-            </Grid>
-
-            <Grid xs={6}>
-              <m.div variants={varFade().inUp}>
-                <Image
-                  alt="our office 1"
-                  src="/assets/images/about/share1.jpeg"
-                  ratio="3/4"
-                  sx={{ borderRadius: 3, boxShadow: shadow }}
-                />
-              </m.div>
-            </Grid>
-          </Grid>
-        )}
+      <Grid container columnSpacing={{ md: 3 }} sx={{ mb: 5 }}>
 
         <Grid xs={12} md={6} lg={5}>
-          <m.div variants={varFade().inRight}>
+          <m.div variants={varFade().inUp}>
             <Typography variant="h2" sx={{ mb: 3 }}>
               Informasi
             </Typography>
           </m.div>
 
-          <m.div variants={varFade().inRight}>
+          <m.div variants={varFade().inUp}>
             <Typography
               sx={{
                 color: theme.palette.mode === 'light' ? 'text.secondary' : 'common.white',

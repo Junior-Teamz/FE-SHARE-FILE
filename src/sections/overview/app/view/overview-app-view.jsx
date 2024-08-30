@@ -2,6 +2,7 @@ import { useContext } from 'react'; // Tambahkan import useContext
 import { useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useState, useCallback } from 'react';
 
 // hooks dan komponen lainnya
 import { useSettingsContext } from 'src/components/settings';
@@ -11,9 +12,13 @@ import AppWidgetSummary from '../app-widget-summary';
 import AppCurrentDownload from '../app-current-download';
 import AppAreaInstalled from '../app-area-installed';
 import { useBoolean } from 'src/hooks/use-boolean';
+import Stack from '@mui/material/Stack';
 import AppWelcome from '../app-welcome';
+import { _folders, _files } from 'src/_mock';
 import { paths } from 'src/routes/paths';
 import FileManagerPanel from 'src/sections/file-manager/file-manager-panel';
+import Scrollbar from 'src/components/scrollbar';
+import FileManagerFolderItem from 'src/sections/file-manager/file-manager-folder-item';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +27,27 @@ export default function OverviewAppView() {
   const theme = useTheme();
   const settings = useSettingsContext();
   const newFolder = useBoolean();
-  
+  const [files, setFiles] = useState([]);
+
+  const [folderName, setFolderName] = useState('');
+  const handleCreateNewFolder = useCallback(() => {
+    newFolder.onFalse();
+    setFolderName('');
+    console.info('CREATE NEW FOLDER');
+  }, [newFolder]);
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const newFiles = acceptedFiles.map((file) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      );
+
+      setFiles([...files, ...newFiles]);
+    },
+    [files]
+  );
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
@@ -138,6 +163,22 @@ export default function OverviewAppView() {
             onOpen={newFolder.onTrue}
             sx={{ mt: 5 }}
           />
+          <Scrollbar>
+            <Stack direction="row" spacing={3} sx={{ pb: 3 }}>
+              {_folders.map((folder) => (
+                <FileManagerFolderItem
+                  key={folder.id}
+                  folder={folder}
+                  onDelete={() => console.info('DELETE', folder.id)}
+                  sx={{
+                    ...(_folders.length > 3 && {
+                      minWidth: 222,
+                    }),
+                  }}
+                />
+              ))}
+            </Stack>
+          </Scrollbar>
         </Grid>
       </Grid>
     </Container>

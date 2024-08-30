@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import InfoIcon from '@mui/icons-material/Info';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { MotionViewport, varFade } from 'src/components/animate';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 

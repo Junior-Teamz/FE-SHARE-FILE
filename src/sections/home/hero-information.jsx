@@ -36,9 +36,17 @@ export default function HeroInformation() {
           }}
         >
           <Stack spacing={2} display="inline-flex" direction="row" sx={{ color: 'common.white' }}>
-            <TextAnimate text="Informasi" variants={varFade().inRight} sx={{ color: 'primary.main' }} />
+            <TextAnimate
+              text="Informasi"
+              variants={varFade().inRight}
+              sx={{ color: 'primary.main' }}
+            />
             <TextAnimate text="&" />
-            <TextAnimate text="Pengumuman" variants={varFade().inRight} sx={{ color: 'primary.main' }} />
+            <TextAnimate
+              text="Pengumuman"
+              variants={varFade().inRight}
+              sx={{ color: 'primary.main' }}
+            />
           </Stack>
 
           <m.div variants={varFade().inRight}>
@@ -67,7 +75,7 @@ function TextAnimate({ text, variants, sx, ...other }) {
     <Box
       component={m.div}
       sx={{
-        typography: 'h1',
+        typography: { md: 'h2', xl: 'h1', xs: 'h4', sm: 'h4' },
         overflow: 'hidden',
         display: 'inline-flex',
         ...sx,
