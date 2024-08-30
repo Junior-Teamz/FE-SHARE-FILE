@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 import { useTheme } from '@mui/material/styles';
-import Link from '@mui/material/Link';
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { RouterLink } from 'src/routes/components';
 import kemen from '../../../public/logo/kemen1.png';
@@ -21,12 +21,7 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
       }}
       {...other}
     >
-      <Box
-        component="img"
-        src={kemen}
-        alt="Logo"
-        sx={{ width: '100%', height: '100%' }}
-      />
+      <Box component="img" src={kemen} alt="Logo" sx={{ width: '100%', height: '100%' }} />
       <svg width="0" height="0" style={{ position: 'absolute', visibility: 'hidden' }}>
         <defs>
           <linearGradient id="BG1" x1="100%" x2="50%" y1="9.946%" y2="50%">

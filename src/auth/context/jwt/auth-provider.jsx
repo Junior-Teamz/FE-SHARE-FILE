@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useReducer, useCallback, useMemo } from 'react';
 import axiosInstance, { endpoints } from 'src/utils/axios';
 import { AuthContext } from './auth-context';
-
+import { isValidToken, setSession } from './utils';
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -32,10 +32,14 @@ export function AuthProvider({ children }) {
   // Initialize the authentication state
   const initialize = useCallback(async () => {
     try {
-      const response = await axiosInstance.get(endpoints.auth.me);
+      const accessToken = sessionStorage.getItem(STORAGE_KEY);
 
-      if (response.data.isValid) {
-        const { user } = response.data;
+      if (accessToken && isValidToken(accessToken)) {
+        setSession(accessToken); // Set token in session and axios headers
+
+        const response = await axios.get(endpoints.auth.me);
+        const { data: user } = response.data;
+
         dispatch({
           type: 'INITIAL',
           payload: { user },
@@ -57,8 +61,10 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     const data = { email, password };
 
-    const response = await axiosInstance.post(endpoints.auth.login, data);
-    const { user } = response.data;
+    const response = await axios.post(endpoints.auth.login, data);
+    console.log(response);
+    const { accessToken, user } = response.data;
+    setSession(accessToken); // Set session and add token to axios headers
 
     dispatch({ type: 'LOGIN', payload: { user } });
   }, []);
@@ -86,7 +92,7 @@ export function AuthProvider({ children }) {
   const memoizedValue = useMemo(
     () => ({
       user: state.user,
-      method: 'jwt', // Untuk kesesuaian dengan header, meskipun token ada di cookie
+      method: 'jwt',
       loading: status === 'loading',
       authenticated: status === 'authenticated',
       unauthenticated: status === 'unauthenticated',

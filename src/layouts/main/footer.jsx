@@ -75,7 +75,20 @@ export default function Footer() {
             mt: -16,
             mb: { xs: -8, md: -12 }, // Jarak bawah untuk responsivitas
           }}
+<<<<<<< HEAD
+          color="text.secondary"
+        >
+          <Box
+            sx={{ mr: 1, maxWidth: { xs: 40, md: 40 } }}
+            component="img"
+            alt="Kemenkop"
+            src={Kemen}
+          />
+          FILE SHARING | KEMENKOPUKM
+        </Typography>
+=======
         />
+>>>>>>> 6a0764a220ece4a6ea256c02e584897bb3063023
 
         <Grid
           container

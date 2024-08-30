@@ -68,6 +68,12 @@ export default function Header() {
               alignItems: 'center',
             }}
           >
+<<<<<<< HEAD
+            <Box maxWidth={40} src={Kemen} component="img" alt="Kemenkop" />
+            <Typography variant="h6" sx={{ ml: '8px' }} color="text.secondary">
+               KEMENKOPUKM | FILE SHARING
+            </Typography>
+=======
             <Box
               component="img"
               src={Kemen}
@@ -76,6 +82,7 @@ export default function Header() {
                 width: 300,
               }}
             />
+>>>>>>> 6a0764a220ece4a6ea256c02e584897bb3063023
           </Box>
 
           <Box sx={{ flexGrow: 1 }} />

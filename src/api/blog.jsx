@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 import { fetcher, endpoints } from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
-
 export function useGetPosts() {
   const URL = endpoints.post.list;
 

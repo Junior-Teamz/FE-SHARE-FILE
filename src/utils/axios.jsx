@@ -3,10 +3,7 @@ import { HOST_API } from 'src/config-global';
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({
-  baseURL: HOST_API,
-  withCredentials: true, // Pastikan ini diaktifkan untuk mengirimkan cookie
-});
+const axiosInstance = axios.create({ baseURL: HOST_API, withCredentials: true });
 
 // Request interceptor (tidak perlu menambahkan header Authorization karena menggunakan cookie HTTP-only)
 axiosInstance.interceptors.request.use(
@@ -39,15 +36,13 @@ export const endpoints = {
   kanban: '/api/kanban',
   calendar: '/api/calendar',
   auth: {
-    me: '/api/auth/me',
+    me: '/api/admin/index',
     login: '/api/login',
     logout: '/api/logout',
     register: '/api/auth/register',
   },
-  mail: {
-    list: '/api/mail/list',
-    details: '/api/mail/details',
-    labels: '/api/mail/labels',
+  folder: {
+    list: '/api/admin/folder', //folder list
   },
   post: {
     list: '/api/post/list',
