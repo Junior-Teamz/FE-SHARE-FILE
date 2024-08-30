@@ -27,7 +27,7 @@ import NavDesktop from './nav/desktop';
 import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
 import { typography } from '@mui/system';
 import { Typography } from '@mui/material';
-import Kemen from '../../../public/logo/kemen1.png';
+import Kemen from '../../../public/logo/kemen2.png';
 
 // ----------------------------------------------------------------------
 
@@ -55,9 +55,7 @@ export default function Header() {
             ...bgBlur({
               color: theme.palette.background.default,
             }),
-            height: {
-              md: HEADER.H_DESKTOP_OFFSET,
-            },
+           
           }),
         }}
       >
@@ -70,10 +68,14 @@ export default function Header() {
               alignItems: 'center',
             }}
           >
-            <Box maxWidth={40} src={Kemen} component="img" alt="Kemenkop" />
-            <Typography variant="h6" sx={{ ml: '8px' }} color="text.secondary">
-              FILE SHARING
-            </Typography>
+            <Box
+              component="img"
+              src={Kemen}
+              alt="Kemenkop"
+              sx={{
+                width: 300,
+              }}
+            />
           </Box>
 
           <Box sx={{ flexGrow: 1 }} />

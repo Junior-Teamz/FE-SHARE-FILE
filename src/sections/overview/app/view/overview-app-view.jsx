@@ -10,7 +10,10 @@ import { SeoIllustration } from 'src/assets/illustrations';
 import AppWidgetSummary from '../app-widget-summary';
 import AppCurrentDownload from '../app-current-download';
 import AppAreaInstalled from '../app-area-installed';
+import { useBoolean } from 'src/hooks/use-boolean';
 import AppWelcome from '../app-welcome';
+import { paths } from 'src/routes/paths';
+import FileManagerPanel from 'src/sections/file-manager/file-manager-panel';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +21,8 @@ export default function OverviewAppView() {
   const { user } = useContext(AuthContext); // Mengambil data pengguna dari AuthContext
   const theme = useTheme();
   const settings = useSettingsContext();
+  const newFolder = useBoolean();
+  
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
@@ -84,8 +89,18 @@ export default function OverviewAppView() {
             subheader="(+43%) than last year"
             chart={{
               categories: [
-                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec',
               ],
               series: [
                 {
@@ -116,6 +131,12 @@ export default function OverviewAppView() {
                 },
               ],
             }}
+          />
+          <FileManagerPanel
+            title="Folders"
+            link={paths.dashboard.fileManager}
+            onOpen={newFolder.onTrue}
+            sx={{ mt: 5 }}
           />
         </Grid>
       </Grid>

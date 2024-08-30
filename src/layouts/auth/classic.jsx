@@ -21,33 +21,6 @@ import Ukm from '../../../public/logo/ukm.png';
 
 // ----------------------------------------------------------------------
 
-const METHODS = [
-  {
-    id: 'jwt',
-    label: 'Jwt',
-    path: paths.auth.jwt.login,
-    icon: '/assets/icons/auth/ic_jwt.svg',
-  },
-  {
-    id: 'firebase',
-    label: 'Firebase',
-    path: paths.auth.firebase.login,
-    icon: '/assets/icons/auth/ic_firebase.svg',
-  },
-  {
-    id: 'amplify',
-    label: 'Amplify',
-    path: paths.auth.amplify.login,
-    icon: '/assets/icons/auth/ic_amplify.svg',
-  },
-  {
-    id: 'auth0',
-    label: 'Auth0',
-    path: paths.auth.auth0.login,
-    icon: '/assets/icons/auth/ic_auth0.svg',
-  },
-];
-
 export default function AuthClassicLayout({ children, image, title }) {
   const { method } = useAuthContext();
 
@@ -76,7 +49,7 @@ export default function AuthClassicLayout({ children, image, title }) {
         mx: 'auto',
         maxWidth: 480,
         px: { xs: 2, md: 8 },
-        py: { xs: 15, md: 30 },
+        py: { xs: 15, md: 15 },
       }}
     >
       {children}
