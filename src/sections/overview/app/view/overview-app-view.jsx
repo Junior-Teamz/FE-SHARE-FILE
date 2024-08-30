@@ -1,32 +1,43 @@
-import { useContext } from 'react'; // Tambahkan import useContext
+import { useContext } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
-
-// hooks dan komponen lainnya
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import { useSettingsContext } from 'src/components/settings';
-import { AuthContext } from 'src/auth/context/jwt/auth-context'; // Import AuthContext
+import { AuthContext } from 'src/auth/context/jwt/auth-context';
 import { SeoIllustration } from 'src/assets/illustrations';
 import AppWidgetSummary from '../app-widget-summary';
-import AppCurrentDownload from '../app-current-download';
-import AppAreaInstalled from '../app-area-installed';
 import AppWelcome from '../app-welcome';
-
+import EmptyContent from 'src/components/empty-content';
+import { Typography } from '@mui/material';
+import { useFetchFolder } from './folders';
+import { useTable } from 'src/components/table';
+import imageFolder from '/assets/icons/files/ic_folder.svg';
 // ----------------------------------------------------------------------
 
 export default function OverviewAppView() {
-  const { user } = useContext(AuthContext); // Mengambil data pengguna dari AuthContext
+  const { user } = useContext(AuthContext);
   const theme = useTheme();
   const settings = useSettingsContext();
+  const table = useTable({ defaultRowsPerPage: 10 });
+
+  const { data, isLoading, isFetching } = useFetchFolder();
+
+  if (isLoading || isFetching) {
+    return <Typography variant="h3">Loading...</Typography>;
+  }
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} >
         <Grid xs={12} md={14}>
-          <AppWelcome
-            title={`Welcome back 👋 ${user?.name}`} // Menggunakan user?.name dari AuthContext
-            img={<SeoIllustration />}
-          />
+          <AppWelcome title={`Welcome back 👋 ${user?.name}`} img={<SeoIllustration />} />
         </Grid>
 
         <Grid xs={12} md={4}>
@@ -52,7 +63,7 @@ export default function OverviewAppView() {
           />
         </Grid>
 
-        <Grid xs={12} md={4}>
+        <Grid xs={12} md={4} sx={{ paddingBottom: '20px' }}>
           <AppWidgetSummary
             title="Total Downloads"
             percent={-0.1}
@@ -63,71 +74,39 @@ export default function OverviewAppView() {
             }}
           />
         </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
-          <AppCurrentDownload
-            title="Current Download"
-            chart={{
-              series: [
-                { label: 'Mac', value: 12244 },
-                { label: 'Window', value: 53345 },
-                { label: 'iOS', value: 44313 },
-                { label: 'Android', value: 78343 },
-              ],
+        {!data ? (
+          <EmptyContent
+            filled
+            title="Folder Kosong"
+            sx={{
+              py: 10,
             }}
           />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={8}>
-          <AppAreaInstalled
-            title="Area Installed"
-            subheader="(+43%) than last year"
-            chart={{
-              categories: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec',
-              ],
-              series: [
-                {
-                  year: '2019',
-                  data: [
-                    {
-                      name: 'Asia',
-                      data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 35, 51, 49],
-                    },
-                    {
-                      name: 'America',
-                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 13, 56, 77],
-                    },
-                  ],
-                },
-                {
-                  year: '2020',
-                  data: [
-                    {
-                      name: 'Asia',
-                      data: [51, 35, 41, 10, 91, 69, 62, 148, 91, 69, 62, 49],
-                    },
-                    {
-                      name: 'America',
-                      data: [56, 13, 34, 10, 77, 99, 88, 45, 77, 99, 88, 77],
-                    },
-                  ],
-                },
-              ],
-            }}
-          />
-        </Grid>
+        ) : (
+          <>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Number</TableCell>
+                    <TableCell>Name</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {data.map((folder, idx) => (
+                    <TableRow key={folder.folder_id}>
+                      <TableCell>{idx + 1}</TableCell>
+                      <TableCell sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <img src={imageFolder} alt="folder-svg-image" />
+                        {folder.name}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+        )}
       </Grid>
     </Container>
   );

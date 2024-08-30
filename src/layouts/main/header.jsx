@@ -72,7 +72,7 @@ export default function Header() {
           >
             <Box maxWidth={40} src={Kemen} component="img" alt="Kemenkop" />
             <Typography variant="h6" sx={{ ml: '8px' }} color="text.secondary">
-              FILE SHARING
+               KEMENKOPUKM | FILE SHARING
             </Typography>
           </Box>
 

@@ -78,7 +78,7 @@ export default function Footer() {
             alt="Kemenkop"
             src={Kemen}
           />
-          FILE SHARING
+          FILE SHARING | KEMENKOPUKM
         </Typography>
 
         <Grid

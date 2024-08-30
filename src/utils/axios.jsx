@@ -34,10 +34,8 @@ export const endpoints = {
     login: '/api/login',
     register: '/api/auth/register',
   },
-  mail: {
-    list: '/api/mail/list',
-    details: '/api/mail/details',
-    labels: '/api/mail/labels',
+  folder: {
+    list: '/api/admin/folder', //folder list
   },
   post: {
     list: '/api/post/list',
