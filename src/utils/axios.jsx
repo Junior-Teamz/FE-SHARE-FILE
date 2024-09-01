@@ -43,6 +43,7 @@ export const endpoints = {
   },
   folder: {
     list: '/api/admin/folder', //folder list
+    create: '/api/admin/folder/create', //create list
   },
   post: {
     list: '/api/post/list',

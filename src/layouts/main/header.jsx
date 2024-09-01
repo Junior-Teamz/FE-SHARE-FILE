@@ -55,7 +55,6 @@ export default function Header() {
             ...bgBlur({
               color: theme.palette.background.default,
             }),
-           
           }),
         }}
       >
