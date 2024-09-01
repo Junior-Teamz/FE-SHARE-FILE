@@ -18,7 +18,7 @@ export const navConfig = [
   },
   {
     title: 'Login',
-    icon: <LoginIcon fontSize="small" icon="solar:home-2-bold-duotone" />,
+    icon: <LoginIcon fontSize="small" />,
     path: '/auth/jwt/login',
   },
   {
@@ -68,7 +68,7 @@ export const navConfig = [
   // },
   //     { title: 'New password', path: paths.authDemo.classic.newPassword },
   //     { title: 'Verify', path: paths.authDemo.classic.verify },
-      // { title: 'Login (modern)', path: paths.authDemo.modern.login },
+  // { title: 'Login (modern)', path: paths.authDemo.modern.login },
   //     { title: 'Register (modern)', path: paths.authDemo.modern.register },
   //     {
   //       title: 'Forgot password (modern)',
