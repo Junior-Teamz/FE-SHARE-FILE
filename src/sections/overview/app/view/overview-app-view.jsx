@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -15,27 +15,61 @@ import { SeoIllustration } from 'src/assets/illustrations';
 import AppWidgetSummary from '../app-widget-summary';
 import AppWelcome from '../app-welcome';
 import EmptyContent from 'src/components/empty-content';
-import { Typography } from '@mui/material';
-import { useFetchFolder } from './folders';
-import { useTable } from 'src/components/table';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Typography,
+  Button,
+} from '@mui/material';
+import { useFetchFolder, useMutationFolder } from './folders';
 import imageFolder from '/assets/icons/files/ic_folder.svg';
+import FileManagerPanel from 'src/sections/file-manager/file-manager-panel';
+import { paths } from 'src/routes/paths';
+import { useForm } from 'react-hook-form';
+import { enqueueSnackbar } from 'notistack';
 // ----------------------------------------------------------------------
 
 export default function OverviewAppView() {
   const { user } = useContext(AuthContext);
   const theme = useTheme();
   const settings = useSettingsContext();
-  const table = useTable({ defaultRowsPerPage: 10 });
+  const [open, setOpen] = useState(false);
 
-  const { data, isLoading, isFetching } = useFetchFolder();
+  const Onsubmit = (data) => {
+    CreateFolder(data);
+    reset();
+  };
 
-  if (isLoading || isFetching) {
+  const { register, handleSubmit, reset } = useForm();
+
+  const { mutate: CreateFolder, isPending } = useMutationFolder({
+    onSuccess: () => {
+      enqueueSnackbar('Folder Created Successfully');
+      refetch();
+      handleClose();
+    },
+  });
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const { data, isLoading, refetch } = useFetchFolder(); //Fetch Folder
+
+  if (isLoading) {
     return <Typography variant="h3">Loading...</Typography>;
   }
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      <Grid container spacing={3} >
+      <Grid container spacing={3}>
         <Grid xs={12} md={14}>
           <AppWelcome title={`Welcome back 👋 ${user?.name}`} img={<SeoIllustration />} />
         </Grid>
@@ -84,27 +118,63 @@ export default function OverviewAppView() {
           />
         ) : (
           <>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Number</TableCell>
-                    <TableCell>Name</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data.map((folder, idx) => (
-                    <TableRow key={folder.folder_id}>
-                      <TableCell>{idx + 1}</TableCell>
-                      <TableCell sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <img src={imageFolder} alt="folder-svg-image" />
-                        {folder.name}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <Grid xs={12} md={12} lg={12}>
+              <div>
+                <FileManagerPanel
+                  title="Folders"
+                  link={paths.dashboard.fileManager}
+                  onOpen={handleClickOpen}
+                  sx={{ mt: 5 }}
+                />
+                <Dialog open={open} onClose={handleClose}>
+                  <DialogTitle>Create Folder</DialogTitle>
+                  <DialogContent>
+                    <form onSubmit={handleSubmit(Onsubmit)}>
+                      <DialogContentText sx={{ mb: 3 }}>
+                        Silahkan masukkan nama folder yang ingin dibuat disini.
+                      </DialogContentText>
+                      <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="name"
+                        name="name"
+                        label="Nama Folder"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        {...register('name')}
+                      />
+                      <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button type="submit"> {isPending ? 'Creating...' : 'Create'}</Button>
+                      </DialogActions>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Number</TableCell>
+                        <TableCell>Name</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {data.map((folder, idx) => (
+                        <TableRow key={folder.folder_id}>
+                          <TableCell>{idx + 1}</TableCell>
+                          <TableCell sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <img src={imageFolder} alt="folder-svg-image" />
+                            {folder.name}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
+            </Grid>
           </>
         )}
       </Grid>

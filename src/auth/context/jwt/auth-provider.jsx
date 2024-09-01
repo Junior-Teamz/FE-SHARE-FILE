@@ -25,6 +25,7 @@ const reducer = (state, action) => {
 };
 
 // ----------------------------------------------------------------------
+const STORAGE_KEY = 'accessToken';
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -37,8 +38,9 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken); // Set token in session and axios headers
 
-        const response = await axios.get(endpoints.auth.me);
+        const response = await axiosInstance.get(endpoints.auth.me);
         const { data: user } = response.data;
+        console.log(user);
 
         dispatch({
           type: 'INITIAL',
@@ -61,7 +63,7 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     const data = { email, password };
 
-    const response = await axios.post(endpoints.auth.login, data);
+    const response = await axiosInstance.post(endpoints.auth.login, data);
     console.log(response);
     const { accessToken, user } = response.data;
     setSession(accessToken); // Set session and add token to axios headers
