@@ -52,31 +52,36 @@ export default function OverviewAppView() {
   const { mutate: CreateFolder, isPending } = useMutationFolder({
     onSuccess: () => {
       enqueueSnackbar('Folder Created Successfully');
+      reset()
       refetch();
       handleClose();
     },
   });
 
-  const { mutate: deleteFolder, isPending: loadingDelete } = useDeleteFolder({
-    onSuccess: () => {
-      enqueueSnackbar('Folder Berhasil Dihapus', { variant: 'success' });
-      refetch();
-      handleDeleteConfirmClose();
-    },
-    onError: (error) => {
-      enqueueSnackbar(`Gagal menghapus folder: ${error.message}`, { variant: 'error' });
-    },
-  });
-  const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
-    onSuccess: () => {
-      enqueueSnackbar('Folder Berhasil diupdate', { variant: 'success' });
-      refetch();
-      handleEditDialogClose();
-    },
-    onError: (error) => {
-      enqueueSnackbar(`Gagal update folder: ${error.message}`, { variant: 'error' });
-    },
-  });
+ const { mutate: deleteFolder, isPending: loadingDelete } = useDeleteFolder({
+  onSuccess: () => {
+    enqueueSnackbar('Folder Berhasil Dihapus', { variant: 'success' });
+    setSelected([]); // Reset checkbox
+    refetch();
+    handleDeleteConfirmClose();
+  },
+  onError: (error) => {
+    enqueueSnackbar(`Gagal menghapus folder: ${error.message}`, { variant: 'error' });
+  },
+});
+
+const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
+  onSuccess: () => {
+    enqueueSnackbar('Folder Berhasil diupdate', { variant: 'success' });
+    setSelected([]); // Reset checkbox
+    refetch();
+    handleEditDialogClose();
+  },
+  onError: (error) => {
+    enqueueSnackbar(`Gagal update folder: ${error.message}`, { variant: 'error' });
+  },
+});
+
   const { data, isLoading, refetch, isFetching } = useFetchFolder(); // Fetch Folder
 
   if (isLoading || isFetching) {
@@ -89,17 +94,20 @@ export default function OverviewAppView() {
     );
   }
 
-  const handleClickOpen = () => setOpen(true);
+  const handleClickOpen = () => {
+    reset(); 
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
   const handleDeleteConfirmOpen = () => setDeleteConfirmOpen(true);
   const handleDeleteConfirmClose = () => setDeleteConfirmOpen(false);
 
-  const handleEditDialogOpen = (folderId, folderName) => {
+  const handleEditDialogOpen = async (folderId, folderName) => {
     setEditFolderId(folderId);
     setValue('name', folderName);
     setEditDialogOpen(true);
-    async;
   };
+  
 
   const handleEditDialogClose = () => {
     setEditDialogOpen(false);
