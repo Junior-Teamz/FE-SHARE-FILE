@@ -24,7 +24,6 @@ const reducer = (state, action) => {
   }
 };
 
-const STORAGE_KEY = 'accessToken';
 // ----------------------------------------------------------------------
 const STORAGE_KEY = 'accessToken';
 

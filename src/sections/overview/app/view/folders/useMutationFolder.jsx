@@ -11,3 +11,35 @@ export const useMutationFolder = ({ onSuccess }) => {
     onSuccess,
   });
 };
+
+export const useDeleteFolder = () => {
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['delete.folder'],
+    mutationFn: async (folderId) => {
+      const response = await axiosInstance.delete(`${endpoints.folder.delete}/${folderId}`);
+      console.log(response);
+      return response;
+    },
+  });
+  return {
+    mutate,
+    isPending,
+  };
+};
+
+
+
+export const useEditFolder = () => {
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['edit.folder'],
+    mutationFn: async ({ folderId, data }) => {
+      const response = await axiosInstance.put(`${endpoints.folder.edit}/${folderId}`, data);
+      console.log(response);
+      return response;
+    },
+  });
+  return {
+    mutate,
+    isPending,
+  };
+};
