@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axiosInstance, { endpoints } from 'src/utils/axios';
 
 export const useFetchFolder = () => {
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ['fetch.folder'],
     queryFn: async () => {
       const response = await axiosInstance.get(endpoints.folder.list);
@@ -16,5 +16,6 @@ export const useFetchFolder = () => {
     data,
     isLoading,
     refetch,
+    isFetching,
   };
 };

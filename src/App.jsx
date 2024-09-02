@@ -62,7 +62,35 @@ export default function App() {
 
   useScrollToTop();
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        staleTime: 60000,
+        cacheTime: 120000,
+        retry: 3,
+        retryDelay: 2000,
+        refetchOnReconnect: true,
+        refetchIntervalInBackground: true,
+        throwOnError: false,
+        useErrorBoundary: true,
+        suspense: true,
+        onError: (error, variables) => {
+          console.error('Error during query:', error, variables);
+        },
+        staleTime: 60000,
+        cacheTime: 120000,
+        refetchOnWindowFocus: false,
+        retry: 3,
+        retryDelay: 2000,
+        refetchOnReconnect: true,
+        refetchIntervalInBackground: true,
+        throwOnError: false,
+        useErrorBoundary: true,
+        suspense: true,
+      },
+    },
+  });
 
   return (
     <QueryClientProvider client={queryClient}>

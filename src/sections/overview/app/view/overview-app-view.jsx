@@ -29,6 +29,7 @@ import {
   TextField,
   Typography,
   Button,
+  CircularProgress,
 } from '@mui/material';
 import { useDeleteFolder, useEditFolder, useFetchFolder, useMutationFolder } from './folders';
 import imageFolder from '/assets/icons/files/ic_folder.svg';
@@ -56,12 +57,36 @@ export default function OverviewAppView() {
     },
   });
 
-  const { mutate: deleteFolder } = useDeleteFolder();
-  const { mutate: editFolder } = useEditFolder();
-  const { data, isLoading, refetch } = useFetchFolder(); // Fetch Folder
+  const { mutate: deleteFolder, isPending: loadingDelete } = useDeleteFolder({
+    onSuccess: () => {
+      enqueueSnackbar('Folder Berhasil Dihapus', { variant: 'success' });
+      refetch();
+      handleDeleteConfirmClose();
+    },
+    onError: (error) => {
+      enqueueSnackbar(`Gagal menghapus folder: ${error.message}`, { variant: 'error' });
+    },
+  });
+  const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
+    onSuccess: () => {
+      enqueueSnackbar('Folder Berhasil diupdate', { variant: 'success' });
+      refetch();
+      handleEditDialogClose();
+    },
+    onError: (error) => {
+      enqueueSnackbar(`Gagal update folder: ${error.message}`, { variant: 'error' });
+    },
+  });
+  const { data, isLoading, refetch, isFetching } = useFetchFolder(); // Fetch Folder
 
-  if (isLoading) {
-    return <Typography variant="h3">Loading...</Typography>;
+  if (isLoading || isFetching) {
+    return (
+      <Container maxWidth="xl">
+        <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: '100vh' }}>
+          <CircularProgress />
+        </Grid>
+      </Container>
+    );
   }
 
   const handleClickOpen = () => setOpen(true);
@@ -73,6 +98,7 @@ export default function OverviewAppView() {
     setEditFolderId(folderId);
     setValue('name', folderName);
     setEditDialogOpen(true);
+    async;
   };
 
   const handleEditDialogClose = () => {
@@ -82,18 +108,9 @@ export default function OverviewAppView() {
 
   const handleDeleteSelected = () => {
     selected.forEach((folderId) => {
-      deleteFolder(folderId, {
-        onSuccess: () => {
-          enqueueSnackbar('Folder Berhasil Dihapus', { variant: 'success' });
-          refetch();
-        },
-        onError: (error) => {
-          enqueueSnackbar(`Gagal menghapus folder: ${error.message}`, { variant: 'error' });
-        },
-      });
+      deleteFolder(folderId);
     });
     setSelected([]);
-    handleDeleteConfirmClose();
   };
 
   const handleEditSubmit = (data) => {
@@ -107,19 +124,7 @@ export default function OverviewAppView() {
       });
       return;
     }
-    editFolder(
-      { folderId: editFolderId, data: { name: data.name } },
-      {
-        onSuccess: () => {
-          enqueueSnackbar('Folder Berhasil diupdate', { variant: 'success' });
-          refetch();
-        },
-        onError: (error) => {
-          enqueueSnackbar(`Gagal update folder: ${error.message}`, { variant: 'error' });
-        },
-      }
-    );
-    handleEditDialogClose();
+    editFolder({ folderId: editFolderId, data: { name: data.name } });
   };
 
   const handleSelectAll = (event) => {
@@ -245,7 +250,7 @@ export default function OverviewAppView() {
               <DialogActions>
                 <Button onClick={handleDeleteConfirmClose}>Batal</Button>
                 <Button onClick={handleDeleteSelected} color="error">
-                  Hapus
+                  {loadingDelete ? 'Deleting' : 'Delete'}
                 </Button>
               </DialogActions>
             </Dialog>
@@ -272,7 +277,7 @@ export default function OverviewAppView() {
                       Cancel
                     </Button>
                     <Button variant="outlined" type="submit">
-                      Update
+                      {loadingEditFolder ? 'Editing' : 'Edit'}
                     </Button>
                   </DialogActions>
                 </form>
@@ -292,17 +297,31 @@ export default function OverviewAppView() {
                           />
                         </TableCell>
                         <TableCell colSpan={4}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                            }}
+                          >
                             <Typography variant="body1">{selected.length} selected</Typography>
                             <div>
                               <Tooltip
                                 title={
-                                  selected.length !== 1 ? 'Silakan pilih satu folder untuk diedit' : ''
+                                  selected.length !== 1
+                                    ? 'Silakan pilih satu folder untuk diedit'
+                                    : ''
                                 }
                               >
                                 <span>
                                   <IconButton
-                                    onClick={() => handleEditDialogOpen(selected[0], data.find(folder => folder.folder_id === selected[0])?.name)}
+                                    onClick={() =>
+                                      handleEditDialogOpen(
+                                        selected[0],
+                                        data.find((folder) => folder.folder_id === selected[0])
+                                          ?.name
+                                      )
+                                    }
                                     disabled={selected.length !== 1}
                                   >
                                     <EditIcon />
