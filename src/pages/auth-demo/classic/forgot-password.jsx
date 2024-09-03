@@ -8,7 +8,7 @@ export default function ClassicForgotPasswordPage() {
   return (
     <>
       <Helmet>
-        <title> Auth Classic: Forgot Password</title>
+        <title> Auth: Forgot Password</title>
       </Helmet>
 
       <ClassicForgotPasswordView />
