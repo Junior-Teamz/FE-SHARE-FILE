@@ -82,20 +82,20 @@ export const paths = {
       newPassword: `${ROOTS.AUTH_DEMO}/classic/new-password`,
       verify: `${ROOTS.AUTH_DEMO}/classic/verify`,
     },
-    modern: {
-      login: `${ROOTS.AUTH_DEMO}/modern/login`,
-      register: `${ROOTS.AUTH_DEMO}/modern/register`,
-      forgotPassword: `${ROOTS.AUTH_DEMO}/modern/forgot-password`,
-      newPassword: `${ROOTS.AUTH_DEMO}/modern/new-password`,
-      verify: `${ROOTS.AUTH_DEMO}/modern/verify`,
-    },
+    // modern: {
+    //   login: `${ROOTS.AUTH_DEMO}/modern/login`,
+    //   register: `${ROOTS.AUTH_DEMO}/modern/register`,
+    //   forgotPassword: `${ROOTS.AUTH_DEMO}/modern/forgot-password`,
+    //   newPassword: `${ROOTS.AUTH_DEMO}/modern/new-password`,
+    //   verify: `${ROOTS.AUTH_DEMO}/modern/verify`,
+    // },
   },
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,
     // mail: `${ROOTS.DASHBOARD}/mail`,
     // chat: `${ROOTS.DASHBOARD}/chat`,
-    blank: `${ROOTS.DASHBOARD}/blank`,
+    // blank: `${ROOTS.DASHBOARD}/blank`,
     // kanban: `${ROOTS.DASHBOARD}/kanban`,
     // calendar: `${ROOTS.DASHBOARD}/calendar`,
     fileManager: `${ROOTS.DASHBOARD}/file-manager`,
@@ -140,16 +140,16 @@ export const paths = {
     //     edit: `${ROOTS.DASHBOARD}/invoice/${MOCK_ID}/edit`,
     //   },
     // },
-    post: {
-      root: `${ROOTS.DASHBOARD}/post`,
-      new: `${ROOTS.DASHBOARD}/post/new`,
-      details: (title) => `${ROOTS.DASHBOARD}/post/${paramCase(title)}`,
-      edit: (title) => `${ROOTS.DASHBOARD}/post/${paramCase(title)}/edit`,
-      demo: {
-        details: `${ROOTS.DASHBOARD}/post/${paramCase(MOCK_TITLE)}`,
-        edit: `${ROOTS.DASHBOARD}/post/${paramCase(MOCK_TITLE)}/edit`,
-      },
-    },
+    // post: {
+    //   root: `${ROOTS.DASHBOARD}/post`,
+    //   new: `${ROOTS.DASHBOARD}/post/new`,
+    //   details: (title) => `${ROOTS.DASHBOARD}/post/${paramCase(title)}`,
+    //   edit: (title) => `${ROOTS.DASHBOARD}/post/${paramCase(title)}/edit`,
+    //   demo: {
+    //     details: `${ROOTS.DASHBOARD}/post/${paramCase(MOCK_TITLE)}`,
+    //     edit: `${ROOTS.DASHBOARD}/post/${paramCase(MOCK_TITLE)}/edit`,
+    //   },
+    // },
     // order: {
     //   root: `${ROOTS.DASHBOARD}/order`,
     //   details: (id) => `${ROOTS.DASHBOARD}/order/${id}`,
