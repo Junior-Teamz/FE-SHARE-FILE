@@ -87,8 +87,9 @@ function Searchbar() {
           {data[group].map((item) => {
             const { title, path } = item;
 
-            const partsTitle = parse(title, match(title, searchQuery));
+            if (!title || !path) return null; // Skip if title or path is missing
 
+            const partsTitle = parse(title, match(title, searchQuery));
             const partsPath = parse(path, match(path, searchQuery));
 
             return (

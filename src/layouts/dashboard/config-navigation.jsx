@@ -215,11 +215,11 @@ export function useNavData() {
           // },
 
           // CALENDAR
-          {
-            title: t('calendar'),
-            path: paths.dashboard.calendar,
-            icon: ICONS.calendar,
-          },
+          // {
+          //   title: t('calendar'),
+          //   path: paths.dashboard.calendar,
+          //   icon: ICONS.calendar,
+          // },
 
           // // KANBAN
           // {

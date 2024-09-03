@@ -178,7 +178,7 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
           <AppWelcome title={`Welcome back 👋 ${user?.name}`} img={<SeoIllustration />} />
         </Grid>
 
-        <Grid xs={12} md={4}>
+        <Grid xs={12} md={6}>
           <AppWidgetSummary
             title="Total Active Users"
             percent={2.6}
@@ -187,7 +187,7 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
           />
         </Grid>
 
-        <Grid xs={12} md={4}>
+        <Grid xs={12} md={6}>
           <AppWidgetSummary
             title="Total File Di Upload"
             percent={0.2}
@@ -199,7 +199,7 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
           />
         </Grid>
 
-        <Grid xs={12} md={4} sx={{ paddingBottom: '20px' }}>
+        {/* <Grid xs={12} md={4} sx={{ paddingBottom: '20px' }}>
           <AppWidgetSummary
             title="Total Downloads"
             percent={-0.1}
@@ -209,7 +209,7 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
               series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
             }}
           />
-        </Grid>
+        </Grid> */}
 
         {!data ? (
           <EmptyContent filled title="Folder Kosong" sx={{ py: 10 }} />

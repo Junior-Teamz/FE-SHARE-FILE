@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 // @mui
 import Collapse from '@mui/material/Collapse';
 import { listClasses } from '@mui/material/List';
-import { listItemTextClasses } from '@mui/material/ListItemText';
 import { listItemButtonClasses } from '@mui/material/ListItemButton';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
@@ -16,10 +15,11 @@ import NavItem from './nav-item';
 
 export default function NavList({ item }) {
   const pathname = usePathname();
-
+  
   const { path, children } = item;
 
-  const externalLink = path.includes('http');
+  // Ensure path is defined before using it
+  const externalLink = path ? path.includes('http') : false;
 
   const nav = useBoolean();
 
@@ -62,5 +62,8 @@ export default function NavList({ item }) {
 }
 
 NavList.propTypes = {
-  item: PropTypes.object,
+  item: PropTypes.shape({
+    path: PropTypes.string,
+    children: PropTypes.array
+  }).isRequired,
 };

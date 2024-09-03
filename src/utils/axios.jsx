@@ -44,8 +44,8 @@ export const endpoints = {
   folder: {
     list: '/api/admin/folder', //folder list
     create: '/api/admin/folder/create', //create list
-    delete: '/api/admin/folder/delete',
-    edit: '/api/admin/folder/update',
+    delete: '/api/admin/folder/delete', //delete folder
+    edit: '/api/admin/folder/update', //edit folder
   },
   post: {
     list: '/api/post/list',

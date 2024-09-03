@@ -20,11 +20,12 @@ export default function NavList({ item, offsetTop }) {
 
   const nav = useBoolean();
 
-  const { path, children } = item;
+  const { path = '', children = [] } = item;
 
   const active = useActiveLink(path, false);
 
-  const externalLink = path.includes('http');
+  // Ensure path is defined before calling includes
+  const externalLink = typeof path === 'string' && path.includes('http');
 
   useEffect(() => {
     if (nav.value) {
@@ -34,7 +35,7 @@ export default function NavList({ item, offsetTop }) {
   }, [pathname]);
 
   const handleOpenMenu = () => {
-    if (children) {
+    if (children.length) {
       nav.onTrue();
     }
   };
@@ -51,7 +52,7 @@ export default function NavList({ item, offsetTop }) {
         onMouseLeave={nav.onFalse}
       />
 
-      {!!children && nav.value && (
+      {children.length > 0 && nav.value && (
         <Portal>
           <Fade in={nav.value}>
             <StyledMenu
@@ -77,7 +78,10 @@ export default function NavList({ item, offsetTop }) {
 }
 
 NavList.propTypes = {
-  item: PropTypes.object,
+  item: PropTypes.shape({
+    path: PropTypes.string,
+    children: PropTypes.array
+  }),
   offsetTop: PropTypes.bool,
 };
 

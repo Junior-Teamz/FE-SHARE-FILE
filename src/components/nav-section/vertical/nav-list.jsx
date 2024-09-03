@@ -10,12 +10,12 @@ import NavItem from './nav-item';
 
 // ----------------------------------------------------------------------
 
-export default function NavList({ data, depth, hasChild, config }) {
+export default function NavList({ data = {}, depth = 0, hasChild = false, config = {} }) {
   const pathname = usePathname();
 
-  const active = useActiveLink(data.path, hasChild);
+  const active = useActiveLink(data.path || '', hasChild);
 
-  const externalLink = data.path.includes('http');
+  const externalLink = (data.path || '').includes('http');
 
   const [open, setOpen] = useState(active);
 
@@ -24,7 +24,7 @@ export default function NavList({ data, depth, hasChild, config }) {
       handleClose();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [pathname, active]);
 
   const handleToggle = useCallback(() => {
     setOpen((prev) => !prev);
@@ -48,7 +48,7 @@ export default function NavList({ data, depth, hasChild, config }) {
 
       {hasChild && (
         <Collapse in={open} unmountOnExit>
-          <NavSubList data={data.children} depth={depth} config={config} />
+          <NavSubList data={data.children || []} depth={depth} config={config} />
         </Collapse>
       )}
     </>
@@ -57,19 +57,22 @@ export default function NavList({ data, depth, hasChild, config }) {
 
 NavList.propTypes = {
   config: PropTypes.object,
-  data: PropTypes.object,
+  data: PropTypes.shape({
+    path: PropTypes.string,
+    children: PropTypes.array,
+  }),
   depth: PropTypes.number,
   hasChild: PropTypes.bool,
 };
 
 // ----------------------------------------------------------------------
 
-function NavSubList({ data, depth, config }) {
+function NavSubList({ data = [], depth = 0, config = {} }) {
   return (
     <>
       {data.map((list) => (
         <NavList
-          key={list.title + list.path}
+          key={list.title + (list.path || '')}
           data={list}
           depth={depth + 1}
           hasChild={!!list.children}
@@ -82,6 +85,12 @@ function NavSubList({ data, depth, config }) {
 
 NavSubList.propTypes = {
   config: PropTypes.object,
-  data: PropTypes.array,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      path: PropTypes.string,
+      children: PropTypes.array,
+    })
+  ),
   depth: PropTypes.number,
 };

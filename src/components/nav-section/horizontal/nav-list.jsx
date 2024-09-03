@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 // @mui
 import Stack from '@mui/material/Stack';
 import Popover from '@mui/material/Popover';
@@ -12,14 +12,14 @@ import NavItem from './nav-item';
 
 // ----------------------------------------------------------------------
 
-export default function NavList({ data, depth, hasChild, config }) {
+export default function NavList({ data = {}, depth = 0, hasChild = false, config = {} }) {
   const navRef = useRef(null);
 
   const pathname = usePathname();
 
-  const active = useActiveLink(data.path, hasChild);
+  const active = useActiveLink(data.path || '', hasChild);
 
-  const externalLink = data.path.includes('http');
+  const externalLink = (data.path || '').includes('http');
 
   const [open, setOpen] = useState(false);
 
@@ -33,30 +33,24 @@ export default function NavList({ data, depth, hasChild, config }) {
   useEffect(() => {
     const appBarEl = Array.from(document.querySelectorAll(`.${appBarClasses.root}`));
 
-    // Reset styles when hover
-    const styles = () => {
+    const resetStyles = () => {
       document.body.style.overflow = '';
       document.body.style.padding = '';
-      // Apply for Window
       appBarEl.forEach((elem) => {
         elem.style.padding = '';
       });
     };
 
-    if (open) {
-      styles();
-    } else {
-      styles();
-    }
+    resetStyles();
   }, [open]);
 
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
     setOpen(true);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+  }, []);
 
   return (
     <>
@@ -102,7 +96,7 @@ export default function NavList({ data, depth, hasChild, config }) {
             pointerEvents: 'none',
           }}
         >
-          <NavSubList data={data.children} depth={depth} config={config} />
+          <NavSubList data={data.children || []} depth={depth} config={config} />
         </Popover>
       )}
     </>
@@ -111,19 +105,22 @@ export default function NavList({ data, depth, hasChild, config }) {
 
 NavList.propTypes = {
   config: PropTypes.object,
-  data: PropTypes.object,
+  data: PropTypes.shape({
+    path: PropTypes.string,
+    children: PropTypes.array,
+  }),
   depth: PropTypes.number,
   hasChild: PropTypes.bool,
 };
 
 // ----------------------------------------------------------------------
 
-function NavSubList({ data, depth, config }) {
+function NavSubList({ data = [], depth = 0, config = {} }) {
   return (
     <Stack spacing={0.5}>
       {data.map((list) => (
         <NavList
-          key={list.title + list.path}
+          key={list.title + (list.path || '')}
           data={list}
           depth={depth + 1}
           hasChild={!!list.children}
@@ -136,6 +133,12 @@ function NavSubList({ data, depth, config }) {
 
 NavSubList.propTypes = {
   config: PropTypes.object,
-  data: PropTypes.array,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      path: PropTypes.string,
+      children: PropTypes.array,
+    })
+  ),
   depth: PropTypes.number,
 };

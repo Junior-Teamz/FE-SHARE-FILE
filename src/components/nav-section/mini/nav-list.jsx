@@ -12,14 +12,14 @@ import NavItem from './nav-item';
 
 // ----------------------------------------------------------------------
 
-export default function NavList({ data, depth, hasChild, config }) {
+export default function NavList({ data = {}, depth = 0, hasChild = false, config = {} }) {
   const navRef = useRef(null);
 
   const pathname = usePathname();
 
-  const active = useActiveLink(data.path, hasChild);
+  const active = useActiveLink(data.path || '', hasChild);
 
-  const externalLink = data.path.includes('http');
+  const externalLink = (data.path || '').includes('http');
 
   const [open, setOpen] = useState(false);
 
@@ -95,7 +95,7 @@ export default function NavList({ data, depth, hasChild, config }) {
             pointerEvents: 'none',
           }}
         >
-          <NavSubList data={data.children} depth={depth} config={config} />
+          <NavSubList data={data.children || []} depth={depth} config={config} />
         </Popover>
       )}
     </>
@@ -104,19 +104,22 @@ export default function NavList({ data, depth, hasChild, config }) {
 
 NavList.propTypes = {
   config: PropTypes.object,
-  data: PropTypes.object,
+  data: PropTypes.shape({
+    path: PropTypes.string,
+    children: PropTypes.array,
+  }),
   depth: PropTypes.number,
   hasChild: PropTypes.bool,
 };
 
 // ----------------------------------------------------------------------
 
-function NavSubList({ data, depth, config }) {
+function NavSubList({ data = [], depth = 0, config = {} }) {
   return (
     <Stack spacing={0.5}>
       {data.map((list) => (
         <NavList
-          key={list.title + list.path}
+          key={list.title + (list.path || '')}
           data={list}
           depth={depth + 1}
           hasChild={!!list.children}
@@ -129,6 +132,12 @@ function NavSubList({ data, depth, config }) {
 
 NavSubList.propTypes = {
   config: PropTypes.object,
-  data: PropTypes.array,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      path: PropTypes.string,
+      children: PropTypes.array,
+    })
+  ),
   depth: PropTypes.number,
 };
