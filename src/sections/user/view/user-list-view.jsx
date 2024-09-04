@@ -1,17 +1,14 @@
-import isEqual from 'lodash/isEqual';
-import { useState, useCallback, useEffect } from 'react';
-// @mui
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import Container from '@mui/material/Container';
-import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
-import TableContainer from '@mui/material/TableContainer';
-// hooks
-import { useBoolean } from 'src/hooks/use-boolean';
-// components
+import { useState, useEffect, useCallback } from 'react';
+import {
+  Card,
+  Table,
+  Button,
+  Tooltip,
+  Container,
+  TableBody,
+  IconButton,
+  TableContainer,
+} from '@mui/material';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
@@ -26,43 +23,39 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/table';
-// hooks
 import { useIndexUser, useDeleteUser } from './UserManagement';
 import UserTableRow from '../user-table-row';
 import UserTableToolbar from '../user-table-toolbar';
-import Iconify from 'src/components/iconify'; // Pastikan import ini ada
+import Iconify from 'src/components/iconify';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
-
-// ----------------------------------------------------------------------
+import { useBoolean } from 'src/hooks/use-boolean';
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name' },
-  { id: 'email', label: 'Email', width: 180 },
-  { id: '', width: 88 },
+  { id: 'name', label: 'Name', width: 180 },
+  { id: 'email', label: 'Email', width: 240 },
+  { id: 'company', label: 'Company', width: 180 },
+  { id: 'role', label: 'Role', width: 180 },
+  { id: 'action', label: 'Action', width: 120 },
 ];
-
-// ----------------------------------------------------------------------
 
 export default function UserListView() {
   const table = useTable();
   const settings = useSettingsContext();
   const confirm = useBoolean();
-
-  const { data, isLoading, refetch, isFetching } = useIndexUser();
-
+  const { data, isLoading, refetch } = useIndexUser();
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
-    if (data && Array.isArray(data.data)) {
-      setTableData(data.data); // Pastikan data.data adalah array
+    if (data?.data?.length) {
+      setTableData(data.data);
     }
   }, [data]);
 
   const dataFiltered = applyFilter({
-    inputData: Array.isArray(tableData) ? tableData : [], // Pastikan inputData adalah array
+    inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
-    filters: table.filters, // Pastikan filters didefinisikan atau menggunakan default
+    filters: table.filters,
   });
 
   const dataInPage = dataFiltered.slice(
@@ -71,28 +64,19 @@ export default function UserListView() {
   );
 
   const denseHeight = table.dense ? 52 : 72;
-
   const notFound = !dataFiltered.length;
 
-  const { mutate: deleteUser, isPending: loadingDelete } = useDeleteUser({
+  const { mutate: deleteUser } = useDeleteUser({
     onSuccess: () => {
       refetch();
       confirm.onFalse();
     },
-    onError: (error) => {
-      console.error(`Gagal menghapus user: ${error.message}`);
-    },
+    onError: (error) => console.error(`Failed to delete user: ${error.message}`),
   });
 
-  const handleDeleteRow = useCallback(
-    (ids) => {
-      deleteUser(ids);
-    },
-    [deleteUser]
-  );
-
+  const handleDeleteRow = useCallback((ids) => deleteUser(ids), [deleteUser]);
   const handleEditRow = useCallback((id) => {
-    // Implementasi navigasi edit user
+    // Implement edit functionality here
   }, []);
 
   return (
@@ -115,9 +99,7 @@ export default function UserListView() {
               New User
             </Button>
           }
-          sx={{
-            mb: { xs: 3, md: 5 },
-          }}
+          sx={{ mb: { xs: 3, md: 5 } }}
         />
 
         <Card>
@@ -221,8 +203,6 @@ export default function UserListView() {
   );
 }
 
-// ----------------------------------------------------------------------
-
 function applyFilter({ inputData, comparator, filters = {} }) {
   const { name, email } = filters;
 
@@ -231,25 +211,20 @@ function applyFilter({ inputData, comparator, filters = {} }) {
     return [];
   }
 
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
+  let filteredData = [...inputData];
+  filteredData = filteredData.sort((a, b) => comparator(a, b));
 
   if (name) {
-    inputData = inputData.filter((user) => user?.name?.toLowerCase().includes(name.toLowerCase()));
+    filteredData = filteredData.filter((user) =>
+      user?.name?.toLowerCase().includes(name.toLowerCase())
+    );
   }
 
   if (email) {
-    inputData = inputData.filter((user) =>
+    filteredData = filteredData.filter((user) =>
       user?.email?.toLowerCase().includes(email.toLowerCase())
     );
   }
 
-  return inputData;
+  return filteredData;
 }

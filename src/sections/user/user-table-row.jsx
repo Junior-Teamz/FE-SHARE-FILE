@@ -1,96 +1,70 @@
 import PropTypes from 'prop-types';
-// @mui
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
-import ListItemText from '@mui/material/ListItemText';
-// hooks
 import { useBoolean } from 'src/hooks/use-boolean';
-// components
+import {
+  Button,
+  Avatar,
+  Tooltip,
+  MenuItem,
+  TableRow,
+  Checkbox,
+  TableCell,
+  IconButton,
+  ListItemText,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-//
 import UserQuickEditForm from './user-quick-edit-form';
 
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, avatarUrl, company, role, status, email, phoneNumber } = row;
+  const { name, avatarUrl, company, role, email } = row;
 
   const confirm = useBoolean();
-
   const quickEdit = useBoolean();
-
   const popover = usePopover();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <>
-      <TableRow hover selected={selected}>
+      <TableRow hover selected={selected} sx={{ '&:not(:last-child)': { mb: 1 } }}>
         <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
+          <Checkbox checked={selected} onChange={onSelectRow} />
         </TableCell>
 
         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
           <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
-
           <ListItemText
             primary={name}
-            secondary={email}
             primaryTypographyProps={{ typography: 'body2' }}
-            secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled',
-            }}
+            secondaryTypographyProps={{ color: 'text.disabled' }}
           />
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{phoneNumber}</TableCell>
-
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{email}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{company}</TableCell>
-
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{role}</TableCell>
 
-        <TableCell>
-          <Label
-            variant="soft"
-            color={
-              (status === 'active' && 'success') ||
-              (status === 'pending' && 'warning') ||
-              (status === 'banned' && 'error') ||
-              'default'
-            }
-          >
-            {status}
-          </Label>
-        </TableCell>
-
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Quick Edit" placement="top" arrow>
-            <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
-              <Iconify icon="solar:pen-bold" />
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          <Tooltip title="More Action" placement="top">
+            <IconButton onClick={popover.onOpen}>
+              <Iconify icon="eva:more-vertical-fill" />
             </IconButton>
           </Tooltip>
-
-          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
         </TableCell>
       </TableRow>
 
       <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
-
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
-        sx={{ width: 140 }}
+        sx={{ width: isSmallScreen ? '100%' : 140 }}
       >
         <MenuItem
           onClick={() => {
@@ -102,10 +76,9 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
         </MenuItem>
-
         <MenuItem
           onClick={() => {
-            onEditRow();
+            quickEdit.onTrue(); // Memindahkan fungsi onTrue ke sini
             popover.onClose();
           }}
         >
@@ -118,7 +91,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Delete"
-        content="Are you sure want to delete?"
+        content="Are you sure you want to delete this item?"
         action={
           <Button variant="contained" color="error" onClick={onDeleteRow}>
             Delete
@@ -133,6 +106,12 @@ UserTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,
-  row: PropTypes.object,
+  row: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    avatarUrl: PropTypes.string,
+    company: PropTypes.string,
+    role: PropTypes.string,
+    email: PropTypes.string.isRequired,
+  }).isRequired,
   selected: PropTypes.bool,
 };
