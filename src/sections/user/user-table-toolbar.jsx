@@ -18,10 +18,9 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // ----------------------------------------------------------------------
 
 export default function UserTableToolbar({
-  filters,
+  filters = {},
   onFilters,
-  //
-  roleOptions,
+  roleOptions = [],
 }) {
   const popover = usePopover();
 
@@ -66,7 +65,7 @@ export default function UserTableToolbar({
 
           <Select
             multiple
-            value={filters.role}
+            value={filters.role || []}
             onChange={handleFilterRole}
             input={<OutlinedInput label="Role" />}
             renderValue={(selected) => selected.map((value) => value).join(', ')}
@@ -78,7 +77,7 @@ export default function UserTableToolbar({
           >
             {roleOptions.map((option) => (
               <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.role.includes(option)} />
+                <Checkbox disableRipple size="small" checked={(filters.role || []).includes(option)} />
                 {option}
               </MenuItem>
             ))}
@@ -88,7 +87,7 @@ export default function UserTableToolbar({
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
-            value={filters.name}
+            value={filters.name || ''}
             onChange={handleFilterName}
             placeholder="Search..."
             InputProps={{
@@ -144,7 +143,10 @@ export default function UserTableToolbar({
 }
 
 UserTableToolbar.propTypes = {
-  filters: PropTypes.object,
-  onFilters: PropTypes.func,
-  roleOptions: PropTypes.array,
+  filters: PropTypes.shape({
+    role: PropTypes.array,
+    name: PropTypes.string,
+  }),
+  onFilters: PropTypes.func.isRequired,
+  roleOptions: PropTypes.arrayOf(PropTypes.string),
 };
