@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useCallback } from 'react';
-// @mui
+import { useCallback, useState } from 'react';
+import { debounce } from 'lodash'; // Import lodash debounce
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
@@ -11,7 +11,6 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Select from '@mui/material/Select';
-// components
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
@@ -23,13 +22,21 @@ export default function UserTableToolbar({
   roleOptions = [],
 }) {
   const popover = usePopover();
+  const [searchTerm, setSearchTerm] = useState(filters.search || ''); // Local state for search input
 
-  const handleFilterName = useCallback(
-    (event) => {
-      onFilters('name', event.target.value);
-    },
+  // Debounce the search input change using lodash debounce
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      onFilters('search', value); // Call onFilters with debounced search value
+    }, 1500),
     [onFilters]
   );
+
+  const handleFilterSearch = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value); // Update local search term
+    debouncedSearch(value); // Call the debounced search function
+  };
 
   const handleFilterRole = useCallback(
     (event) => {
@@ -87,9 +94,9 @@ export default function UserTableToolbar({
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
-            value={filters.name || ''}
-            onChange={handleFilterName}
-            placeholder="Search..."
+            value={searchTerm} // Bind input value to local searchTerm
+            onChange={handleFilterSearch} // Handle input changes
+            placeholder="Search by name or email..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -145,7 +152,7 @@ export default function UserTableToolbar({
 UserTableToolbar.propTypes = {
   filters: PropTypes.shape({
     role: PropTypes.array,
-    name: PropTypes.string,
+    search: PropTypes.string,
   }),
   onFilters: PropTypes.func.isRequired,
   roleOptions: PropTypes.arrayOf(PropTypes.string),

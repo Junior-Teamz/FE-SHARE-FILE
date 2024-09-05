@@ -8,6 +8,7 @@ import {
   TableBody,
   IconButton,
   TableContainer,
+  CircularProgress
 } from '@mui/material';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
@@ -30,6 +31,7 @@ import Iconify from 'src/components/iconify';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 import { useBoolean } from 'src/hooks/use-boolean';
+import debounce from 'lodash/debounce';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', width: 180 },
@@ -39,23 +41,49 @@ const TABLE_HEAD = [
   { id: 'action', label: 'Action', width: 120 },
 ];
 
+const DEBOUNCE_DELAY = 1500; // Adjust the delay as needed
+
 export default function UserListView() {
   const table = useTable();
   const settings = useSettingsContext();
   const confirm = useBoolean();
-  const { data, isLoading, refetch } = useIndexUser();
-  const [tableData, setTableData] = useState([]);
+  const [filters, setFilters] = useState({ search: '' });
+  const [searchTerm, setSearchTerm] = useState(filters.search);
 
-  useEffect(() => {
-    if (data?.data?.length) {
-      setTableData(data.data);
-    }
-  }, [data]);
+  const { data, isLoading, refetch, isFetching } = useIndexUser(filters);
+
+  // Debounced function to handle search queries
+  const debouncedSearch = useCallback(
+    debounce((query) => {
+      setFilters((prev) => ({
+        ...prev,
+        search: query,
+      }));
+    }, DEBOUNCE_DELAY),
+    []
+  );
+
+  // Update the search term and trigger debounced search
+  const handleSearchChange = (event) => {
+    const { value } = event.target;
+    setSearchTerm(value);
+    debouncedSearch(value);
+  };
+
+  // Define tableData based on data from query
+  const tableData = data?.data || [];
+
+  const handleFilters = (field, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
-    filters: table.filters,
+    filters,
   });
 
   const dataInPage = dataFiltered.slice(
@@ -103,9 +131,20 @@ export default function UserListView() {
         />
 
         <Card>
-          <UserTableToolbar filters={table.filters} onFilters={table.setFilters} />
+          <UserTableToolbar
+            filters={filters}
+            onFilters={handleFilters} // Use the handleFilters function
+            onSearchChange={handleSearchChange} // Pass the search change handler
+            searchTerm={searchTerm} // Pass the current search term
+          />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            {isFetching && (
+              <CircularProgress
+                sx={{ position: 'absolute', top: 20, right: 20 }}
+              />
+            )}
+
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -204,7 +243,7 @@ export default function UserListView() {
 }
 
 function applyFilter({ inputData, comparator, filters = {} }) {
-  const { name, email } = filters;
+  const { search } = filters;
 
   if (!Array.isArray(inputData)) {
     console.error('Expected inputData to be an array but received:', inputData);
@@ -214,15 +253,11 @@ function applyFilter({ inputData, comparator, filters = {} }) {
   let filteredData = [...inputData];
   filteredData = filteredData.sort((a, b) => comparator(a, b));
 
-  if (name) {
-    filteredData = filteredData.filter((user) =>
-      user?.name?.toLowerCase().includes(name.toLowerCase())
-    );
-  }
-
-  if (email) {
-    filteredData = filteredData.filter((user) =>
-      user?.email?.toLowerCase().includes(email.toLowerCase())
+  if (search) {
+    filteredData = filteredData.filter(
+      (user) =>
+        user?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        user?.email?.toLowerCase().includes(search.toLowerCase())
     );
   }
 
