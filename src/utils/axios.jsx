@@ -47,6 +47,12 @@ export const endpoints = {
     delete: '/api/admin/folder/delete', //delete folder
     edit: '/api/admin/folder/update', //edit folder
   },
+  users:{
+    list: '/api/admin/users/list',
+    create:'/api/admin/users/create_user',
+    update:'/api/admin/users/update_user',
+    delete:'/api/admin/users/delete_user',
+  },
   post: {
     list: '/api/post/list',
     details: '/api/post/details',
