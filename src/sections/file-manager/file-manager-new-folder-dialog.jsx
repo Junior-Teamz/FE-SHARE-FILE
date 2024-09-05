@@ -15,7 +15,7 @@ import { Upload } from 'src/components/upload';
 // ----------------------------------------------------------------------
 
 export default function FileManagerNewFolderDialog({
-  title = 'Upload Files',
+  title,
   open,
   onClose,
   //

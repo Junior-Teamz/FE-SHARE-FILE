@@ -6,9 +6,8 @@ export const useFetchFolder = () => {
     queryKey: ['fetch.folder'],
     queryFn: async () => {
       const response = await axiosInstance.get(endpoints.folder.list);
-      const { folders } = response.data.data;
-      console.log(folders);
-      return folders;
+      const { data: result } = response.data;
+      return result;
     },
   });
 

@@ -37,12 +37,17 @@ import FileManagerPanel from 'src/sections/file-manager/file-manager-panel';
 import { paths } from 'src/routes/paths';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
+import FileManagerNewFolderDialog from 'src/sections/file-manager/file-manager-new-folder-dialog';
+import { _files } from 'src/_mock';
+import { Stack } from '@mui/system';
+import FileRecentItem from 'src/sections/file-manager/file-recent-item';
 export default function OverviewAppView() {
   const { user } = useContext(AuthContext);
   const theme = useTheme();
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
+  const [opened, setOpened] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -52,37 +57,39 @@ export default function OverviewAppView() {
   const { mutate: CreateFolder, isPending } = useMutationFolder({
     onSuccess: () => {
       enqueueSnackbar('Folder Created Successfully');
-      reset()
+      reset();
       refetch();
-      handleClose();
+      handleClosed();
     },
   });
 
- const { mutate: deleteFolder, isPending: loadingDelete } = useDeleteFolder({
-  onSuccess: () => {
-    enqueueSnackbar('Folder Berhasil Dihapus', { variant: 'success' });
-    setSelected([]); // Reset checkbox
-    refetch();
-    handleDeleteConfirmClose();
-  },
-  onError: (error) => {
-    enqueueSnackbar(`Gagal menghapus folder: ${error.message}`, { variant: 'error' });
-  },
-});
+  const { mutate: deleteFolder, isPending: loadingDelete } = useDeleteFolder({
+    onSuccess: () => {
+      enqueueSnackbar('Folder Berhasil Dihapus', { variant: 'success' });
+      setSelected([]); // Reset checkbox
+      refetch();
+      handleDeleteConfirmClose();
+    },
+    onError: (error) => {
+      enqueueSnackbar(`Gagal menghapus folder: ${error.message}`, { variant: 'error' });
+    },
+  });
 
-const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
-  onSuccess: () => {
-    enqueueSnackbar('Folder Berhasil diupdate', { variant: 'success' });
-    setSelected([]); // Reset checkbox
-    refetch();
-    handleEditDialogClose();
-  },
-  onError: (error) => {
-    enqueueSnackbar(`Gagal update folder: ${error.message}`, { variant: 'error' });
-  },
-});
+  const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
+    onSuccess: () => {
+      enqueueSnackbar('Folder Berhasil diupdate', { variant: 'success' });
+      setSelected([]); // Reset checkbox
+      refetch();
+      handleEditDialogClose();
+    },
+    onError: (error) => {
+      enqueueSnackbar(`Gagal update folder: ${error.message}`, { variant: 'error' });
+    },
+  });
 
   const { data, isLoading, refetch, isFetching } = useFetchFolder(); // Fetch Folder
+
+  console.log(data.files);
 
   if (isLoading || isFetching) {
     return (
@@ -95,10 +102,15 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
   }
 
   const handleClickOpen = () => {
-    reset(); 
+    reset();
     setOpen(true);
   };
+  const handleClickOpened = () => {
+    reset();
+    setOpened(true);
+  };
   const handleClose = () => setOpen(false);
+  const handleClosed = () => setOpened(false);
   const handleDeleteConfirmOpen = () => setDeleteConfirmOpen(true);
   const handleDeleteConfirmClose = () => setDeleteConfirmOpen(false);
 
@@ -107,7 +119,6 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
     setValue('name', folderName);
     setEditDialogOpen(true);
   };
-  
 
   const handleEditDialogClose = () => {
     setEditDialogOpen(false);
@@ -211,17 +222,17 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
           />
         </Grid> */}
 
-        {!data ? (
+        {!data.folders ? (
           <EmptyContent filled title="Folder Kosong" sx={{ py: 10 }} />
         ) : (
           <Grid xs={12} md={12} lg={12}>
             <FileManagerPanel
               title="Folders"
               link={paths.dashboard.fileManager}
-              onOpen={handleClickOpen}
+              onOpen={handleClickOpened}
               sx={{ mt: 5 }}
             />
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={opened} onClose={handleClosed}>
               <DialogTitle>Create Folder</DialogTitle>
               <DialogContent>
                 <form onSubmit={handleSubmit(Onsubmit)}>
@@ -240,7 +251,7 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
                     {...register('name')}
                   />
                   <DialogActions>
-                    <Button variant="outlined" onClick={handleClose}>
+                    <Button variant="outlined" onClick={handleClosed}>
                       Cancel
                     </Button>
                     <Button variant="outlined" type="submit">
@@ -326,8 +337,9 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
                                     onClick={() =>
                                       handleEditDialogOpen(
                                         selected[0],
-                                        data.find((folder) => folder.folder_id === selected[0])
-                                          ?.name
+                                        data?.folders.find(
+                                          (folder) => folder.folder_id === selected[0]
+                                        )?.name
                                       )
                                     }
                                     disabled={selected.length !== 1}
@@ -359,7 +371,7 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data.map((folder, idx) => (
+                  {data?.folders?.map((folder, idx) => (
                     <TableRow
                       key={folder.folder_id}
                       selected={selected.indexOf(folder.folder_id) !== -1}
@@ -382,6 +394,38 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
             </TableContainer>
           </Grid>
         )}
+        <Grid xs={12} md={12} lg={12}>
+          <FileManagerPanel
+            title="Files"
+            link={paths.dashboard.fileManager}
+            onOpen={handleClickOpen}
+            sx={{ mt: 5 }}
+          />
+          <FileManagerNewFolderDialog
+            title="Upload Files"
+            open={open} // Use the same state
+            onClose={handleClose} // Ensure the dialog can close properly
+          />
+          <Stack spacing={2}>
+            {_files.map((file) => (
+              <FileRecentItem
+                key={file.id}
+                file={file}
+                onDelete={() => console.info('DELETE', file.id)}
+              />
+            ))}
+          </Stack>
+        </Grid>
+        <Grid xs={12} md={12} lg={12}>
+          {data.files.slice(0, 5).map((file, id) => (
+            <>
+              <Typography variant="h5">{file.name}</Typography>
+              <Typography variant="h5">{file.size}</Typography>
+              <Typography variant="h5">{file.mime_type}</Typography>
+              <img src={`http://127.0.0.1:8000/app/storage${file.path}`} alt="gambar" />
+            </>
+          ))}
+        </Grid>
       </Grid>
     </Container>
   );
