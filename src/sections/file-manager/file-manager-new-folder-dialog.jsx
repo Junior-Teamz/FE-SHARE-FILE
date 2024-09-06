@@ -11,11 +11,13 @@ import Dialog from '@mui/material/Dialog';
 // components
 import Iconify from 'src/components/iconify';
 import { Upload } from 'src/components/upload';
+import { useMutationUploadFiles } from './view/folderDetail/useMutationUploadFiles';
+import { enqueueSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
 export default function FileManagerNewFolderDialog({
-  title = 'Upload Files',
+  title,
   open,
   onClose,
   //
@@ -27,7 +29,6 @@ export default function FileManagerNewFolderDialog({
   ...other
 }) {
   const [files, setFiles] = useState([]);
-
   useEffect(() => {
     if (!open) {
       setFiles([]);
@@ -47,9 +48,25 @@ export default function FileManagerNewFolderDialog({
     [files]
   );
 
+  const { mutate: UploadFiles, isPending: loadingUpload } = useMutationUploadFiles({
+    onSuccess: () => {
+      enqueueSnackbar('Files Uploaded Successfully');
+      handleRemoveAllFiles();
+      onClose();
+    },
+    onError: (error) => {
+      enqueueSnackbar(error.message, { variant: 'error' });
+    },
+  });
+
   const handleUpload = () => {
-    onClose();
-    console.info('ON UPLOAD');
+    const fd = new FormData();
+
+    files.forEach((file) => {
+      fd.append('file[]', file);
+    });
+
+    UploadFiles(fd);
   };
 
   const handleRemoveFile = (inputFile) => {
@@ -85,7 +102,7 @@ export default function FileManagerNewFolderDialog({
           startIcon={<Iconify icon="eva:cloud-upload-fill" />}
           onClick={handleUpload}
         >
-          Upload
+          {loadingUpload ? 'loading...' : 'Upload Files'}
         </Button>
 
         {!!files.length && (

@@ -2,7 +2,7 @@ import { memo } from 'react';
 import ApexChart from 'react-apexcharts';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
-// theme
+// themes
 import { bgBlur } from 'src/theme/css';
 
 // ----------------------------------------------------------------------

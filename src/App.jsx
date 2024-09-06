@@ -66,7 +66,6 @@ export default function App() {
       queries: {
         refetchOnWindowFocus: false,
         staleTime: 60000,
-        cacheTime: 120000,
         retry: 3,
         retryDelay: 2000,
         refetchOnReconnect: true,
@@ -77,16 +76,6 @@ export default function App() {
         onError: (error, variables) => {
           console.error('Error during query:', error, variables);
         },
-        staleTime: 60000,
-        cacheTime: 120000,
-        refetchOnWindowFocus: false,
-        retry: 3,
-        retryDelay: 2000,
-        refetchOnReconnect: true,
-        refetchIntervalInBackground: true,
-        throwOnError: false,
-        useErrorBoundary: true,
-        suspense: true,
       },
     },
   });

@@ -31,6 +31,7 @@ export default function UserNewEditForm({ currentUser }) {
       reset();
       refetch();
       router.push(returnTo || paths.dashboard.user.list);
+      router.push(returnTo || paths.dashboard.user.list);
     },
     onError: (error) => {
       enqueueSnackbar(`Error: ${error.message}`, { variant: 'error' });

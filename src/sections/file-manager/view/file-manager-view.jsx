@@ -159,7 +159,6 @@ export default function FileManagerView() {
     />
   );
 
-
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>

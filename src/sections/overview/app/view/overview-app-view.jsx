@@ -15,7 +15,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 import { useSettingsContext } from 'src/components/settings';
-import { AuthContext } from 'src/auth/context/jwt/auth-context';
 import { SeoIllustration } from 'src/assets/illustrations';
 import AppWidgetSummary from '../app-widget-summary';
 import AppWelcome from '../app-welcome';
@@ -37,52 +36,68 @@ import FileManagerPanel from 'src/sections/file-manager/file-manager-panel';
 import { paths } from 'src/routes/paths';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
+import FileManagerNewFolderDialog from 'src/sections/file-manager/file-manager-new-folder-dialog';
+import { _files } from 'src/_mock';
+import { Box, Stack } from '@mui/system';
+import FileRecentItem from 'src/sections/file-manager/file-recent-item';
+import { Link } from 'react-router-dom';
+import { AuthContext } from 'src/auth/context/jwt/auth-context';
 export default function OverviewAppView() {
   const { user } = useContext(AuthContext);
   const theme = useTheme();
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
+  const [opened, setOpened] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selected, setSelected] = useState([]);
   const [editFolderId, setEditFolderId] = useState(null);
-
   const { register, handleSubmit, reset, setValue } = useForm();
+  const [tagsInput, setTagsInput] = useState(''); // To handle input as a string
   const { mutate: CreateFolder, isPending } = useMutationFolder({
     onSuccess: () => {
       enqueueSnackbar('Folder Created Successfully');
-      reset()
+      reset();
       refetch();
-      handleClose();
+      handleClosed();
+    },
+    onError: (error) => {
+      if (error.errors.description) {
+        enqueueSnackbar(`Gagal membuat folder: ${error.errors.description}`, { variant: 'error' });
+      } else {
+        enqueueSnackbar(`Gagal membuat folder: ${error.errors.tags}`, { variant: 'error' });
+      }
     },
   });
 
- const { mutate: deleteFolder, isPending: loadingDelete } = useDeleteFolder({
-  onSuccess: () => {
-    enqueueSnackbar('Folder Berhasil Dihapus', { variant: 'success' });
-    setSelected([]); // Reset checkbox
-    refetch();
-    handleDeleteConfirmClose();
-  },
-  onError: (error) => {
-    enqueueSnackbar(`Gagal menghapus folder: ${error.message}`, { variant: 'error' });
-  },
-});
+  const { mutate: deleteFolder, isPending: loadingDelete } = useDeleteFolder({
+    onSuccess: () => {
+      enqueueSnackbar('Folder Berhasil Dihapus', { variant: 'success' });
+      setSelected([]); // Reset checkbox
+      refetch();
+      handleDeleteConfirmClose();
+    },
+    onError: (error) => {
+      enqueueSnackbar(`Gagal menghapus folder: ${error.message}`, { variant: 'error' });
+    },
+  });
 
-const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
-  onSuccess: () => {
-    enqueueSnackbar('Folder Berhasil diupdate', { variant: 'success' });
-    setSelected([]); // Reset checkbox
-    refetch();
-    handleEditDialogClose();
-  },
-  onError: (error) => {
-    enqueueSnackbar(`Gagal update folder: ${error.message}`, { variant: 'error' });
-  },
-});
+  const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
+    onSuccess: () => {
+      enqueueSnackbar('Folder Berhasil diupdate', { variant: 'success' });
+      setSelected([]); // Reset checkbox
+      refetch();
+      handleEditDialogClose();
+    },
+    onError: (error) => {
+      enqueueSnackbar(`Gagal update folder: ${error.message}`, { variant: 'error' });
+    },
+  });
 
   const { data, isLoading, refetch, isFetching } = useFetchFolder(); // Fetch Folder
+  const { files } = data;
+  console.log(files);
 
   if (isLoading || isFetching) {
     return (
@@ -95,10 +110,15 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
   }
 
   const handleClickOpen = () => {
-    reset(); 
+    reset();
     setOpen(true);
   };
+  const handleClickOpened = () => {
+    reset();
+    setOpened(true);
+  };
   const handleClose = () => setOpen(false);
+  const handleClosed = () => setOpened(false);
   const handleDeleteConfirmOpen = () => setDeleteConfirmOpen(true);
   const handleDeleteConfirmClose = () => setDeleteConfirmOpen(false);
 
@@ -107,7 +127,6 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
     setValue('name', folderName);
     setEditDialogOpen(true);
   };
-  
 
   const handleEditDialogClose = () => {
     setEditDialogOpen(false);
@@ -156,9 +175,24 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
     setSelected(newSelected);
   };
 
+  const handleTagsChange = (event) => {
+    setTagsInput(event.target.value); // Update the tags input string
+  };
   const Onsubmit = (data) => {
-    if (!data.name || data.name.trim() === '') {
-      enqueueSnackbar('Nama folder harus diisi', {
+    // Split tags input by commas, trim whitespace, and filter out empty values
+    const tagsArray = tagsInput
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+
+    const folderData = {
+      name: data.name,
+      description: data.description,
+      tags: tagsArray, // Use the parsed array of tags
+    };
+
+    if (!folderData.name || folderData.name.trim() === '') {
+      enqueueSnackbar('Folder name is required', {
         variant: 'warning',
         anchorOrigin: {
           vertical: 'top',
@@ -167,10 +201,11 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
       });
       return;
     }
-    CreateFolder(data);
-    reset();
-  };
 
+    CreateFolder(folderData); // Call the mutation to create the folder
+    reset();
+    setTagsInput(''); // Clear the tags input
+  };
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
@@ -211,36 +246,125 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
           />
         </Grid> */}
 
-        {!data ? (
-          <EmptyContent filled title="Folder Kosong" sx={{ py: 10 }} />
+        {data.folders.length === 0 ? (
+          <>
+            <Grid xs={12} md={12} lg={12}>
+              <FileManagerPanel
+                title="Folders"
+                link={paths.dashboard.fileManager}
+                onOpen={handleClickOpened}
+                sx={{ mt: 5 }}
+              />
+              <EmptyContent filled title="Folder Kosong" sx={{ py: 10 }} />
+              <Dialog open={opened} onClose={handleClosed}>
+                <DialogTitle>Create Folder</DialogTitle>
+                <DialogContent>
+                  <form onSubmit={handleSubmit(Onsubmit)}>
+                    <DialogContentText sx={{ mb: 3 }}>
+                      Silahkan masukkan nama folder yang ingin dibuat disini.
+                    </DialogContentText>
+                    <Stack spacing={2}>
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        name="name"
+                        label="Nama Folder"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        {...register('name')}
+                      />
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        name="description"
+                        label="Description"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        {...register('description')}
+                      />
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        name="tags"
+                        label="Tags"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={tagsInput} // Bind the tags input string
+                        onChange={handleTagsChange}
+                      />
+                    </Stack>
+                    <DialogActions>
+                      <Button variant="outlined" onClick={handleClosed}>
+                        Cancel
+                      </Button>
+                      <Button variant="outlined" type="submit">
+                        {isPending ? 'Creating...' : 'Create'}
+                      </Button>
+                    </DialogActions>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </Grid>
+          </>
         ) : (
           <Grid xs={12} md={12} lg={12}>
             <FileManagerPanel
               title="Folders"
               link={paths.dashboard.fileManager}
-              onOpen={handleClickOpen}
+              onOpen={handleClickOpened}
               sx={{ mt: 5 }}
             />
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={opened} onClose={handleClosed}>
               <DialogTitle>Create Folder</DialogTitle>
               <DialogContent>
                 <form onSubmit={handleSubmit(Onsubmit)}>
                   <DialogContentText sx={{ mb: 3 }}>
                     Silahkan masukkan nama folder yang ingin dibuat disini.
                   </DialogContentText>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    name="name"
-                    label="Nama Folder"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    {...register('name')}
-                  />
+                  <Stack spacing={2}>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      name="name"
+                      label="Nama Folder"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      {...register('name')}
+                    />
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      name="description"
+                      label="Description"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      {...register('description')}
+                    />
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      name="tags"
+                      label="Tags"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      value={tagsInput} // Bind the tags input string
+                      onChange={handleTagsChange}
+                    />
+                  </Stack>
                   <DialogActions>
-                    <Button variant="outlined" onClick={handleClose}>
+                    <Button variant="outlined" onClick={handleClosed}>
                       Cancel
                     </Button>
                     <Button variant="outlined" type="submit">
@@ -326,8 +450,9 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
                                     onClick={() =>
                                       handleEditDialogOpen(
                                         selected[0],
-                                        data.find((folder) => folder.folder_id === selected[0])
-                                          ?.name
+                                        data?.folders.find(
+                                          (folder) => folder.folder_id === selected[0]
+                                        )?.name
                                       )
                                     }
                                     disabled={selected.length !== 1}
@@ -359,7 +484,7 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data.map((folder, idx) => (
+                  {data?.folders?.map((folder, idx) => (
                     <TableRow
                       key={folder.folder_id}
                       selected={selected.indexOf(folder.folder_id) !== -1}
@@ -373,7 +498,13 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
                       <TableCell>{idx + 1}</TableCell>
                       <TableCell sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <img src={imageFolder} alt="folder" />
-                        {folder.name}
+                        {/* Bungkus hanya pada TableCell yang menampilkan nama */}
+                        <Link
+                          to={`file-manager/info/${folder.folder_id}`}
+                          style={{ textDecoration: 'none', color: 'inherit' }}
+                        >
+                          {folder.name}
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -382,6 +513,30 @@ const { mutate: editFolder, isPending: loadingEditFolder } = useEditFolder({
             </TableContainer>
           </Grid>
         )}
+        <Grid xs={12} md={12} lg={12} sx={{ mt: 10 }}>
+          <FileManagerPanel
+            title="Files"
+            link={paths.dashboard.fileManager}
+            onOpen={handleClickOpen}
+            sx={{ mt: 5 }}
+          />
+          <FileManagerNewFolderDialog
+            title="Upload Files"
+            open={open} // Use the same state
+            onClose={handleClose} // Ensure the dialog can close properly
+          />
+
+          <Stack spacing={2}>
+            {files.map((file) => (
+              <FileRecentItem
+                key={file.id}
+                file={file}
+                onDelete={() => console.info('DELETE', file.id)}
+              />
+            ))}
+            {/* //file recent item mengirim data ke yang lain */}
+          </Stack>
+        </Grid>
       </Grid>
     </Container>
   );

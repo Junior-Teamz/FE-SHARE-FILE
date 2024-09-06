@@ -32,26 +32,27 @@ export const fetcher = async (args) => {
 // ----------------------------------------------------------------------
 
 export const endpoints = {
-  chat: '/api/chat',
-  kanban: '/api/kanban',
-  calendar: '/api/calendar',
   auth: {
     me: '/api/admin/index',
     login: '/api/login',
     logout: '/api/logout',
     register: '/api/auth/register',
   },
+  files: {
+    upload: '/api/admin/file/upload',
+  },
   folder: {
+    detail: '/api/admin/folder/info/',
     list: '/api/admin/folder', //folder list
     create: '/api/admin/folder/create', //create list
     delete: '/api/admin/folder/delete', //delete folder
     edit: '/api/admin/folder/update', //edit folder
   },
-  users:{
+  users: {
     list: '/api/admin/users/list',
-    create:'/api/admin/users/create_user',
-    update:'/api/admin/users/update_user',
-    delete:'/api/admin/users/delete_user',
+    create: '/api/admin/users/create_user',
+    update: '/api/admin/users/update_user',
+    delete: '/api/admin/users/delete_user',
   },
   instance:{
     list:'api/admin/instansi',

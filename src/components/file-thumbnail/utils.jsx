@@ -124,6 +124,7 @@ export function fileNameByUrl(fileUrl) {
 // ----------------------------------------------------------------------
 
 export function fileData(file) {
+  // console.log(file);
   // Url
   if (typeof file === 'string') {
     return {
