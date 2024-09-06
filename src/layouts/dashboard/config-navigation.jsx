@@ -110,6 +110,20 @@ export function useNavData() {
             ],
           },
 
+          {
+            title: t('instance management'),
+            path: paths.dashboard.instance.root,
+            icon: ICONS.user,
+            children: [
+              // { title: t('profile'), path: paths.dashboard.user.root },
+              // { title: t('cards'), path: paths.dashboard.user.cards },
+              { title: t('instance list'), path: paths.dashboard.instance.list },
+              { title: t('instance create'), path: paths.dashboard.instance.create },
+              // { title: t('instance edit'), path: paths.dashboard.instance.edit },
+       
+            ],
+          },
+
           // PRODUCT
           // {
           //   title: t('product'),

@@ -98,6 +98,7 @@ export const paths = {
     // blank: `${ROOTS.DASHBOARD}/blank`,
     // kanban: `${ROOTS.DASHBOARD}/kanban`,
     // calendar: `${ROOTS.DASHBOARD}/calendar`,
+
     fileManager: `${ROOTS.DASHBOARD}/file-manager`,
     permission: `${ROOTS.DASHBOARD}/permission`,
     general: {
@@ -120,6 +121,12 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
     },
+    instance: {
+      root: `${ROOTS.DASHBOARD}/instance`,
+      list: `${ROOTS.DASHBOARD}/instance/list`,
+      create: `${ROOTS.DASHBOARD}/instance/create`,
+      edit: `${ROOTS.DASHBOARD}/instance/edit`,
+    }
     // product: {
     //   root: `${ROOTS.DASHBOARD}/product`,
     //   new: `${ROOTS.DASHBOARD}/product/new`,

@@ -115,7 +115,7 @@ export default function HomeLookingFor() {
                 },
               }}
             >
-              More...
+              Lihat Selengkapnya...
             </Button>
           </m.div>
         </Grid>

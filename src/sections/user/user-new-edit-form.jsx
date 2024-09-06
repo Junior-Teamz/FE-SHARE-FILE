@@ -1,25 +1,36 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useSnackbar } from 'notistack'; // Import useSnackbar
-import LoadingButton from '@mui/lab/LoadingButton';
+import { useSnackbar } from 'notistack';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import FormProvider, { RHFTextField, RHFSelect } from 'src/components/hook-form';
 import { useCreateUser } from './view/UserManagement';
-import { Button } from '@mui/material';
+import { Button, MenuItem } from '@mui/material';
+import { useIndexInstance } from '../instancepages/view/Instance'; // Import hook useIndexInstance
+import { paths } from 'src/routes/paths';
+import { useRouter, useSearchParams } from 'src/routes/hooks';
 
 export default function UserNewEditForm({ currentUser }) {
-  const { enqueueSnackbar } = useSnackbar(); // Initialize useSnackbar
-  const { mutate: CreateUser, isLoading, isPending } = useCreateUser({
+  const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const returnTo = searchParams.get('returnTo');
+
+  // Ambil data instansi menggunakan hook useIndexInstance
+  const { data: instansiList, isLoading: isLoadingInstansi } = useIndexInstance();
+
+  const { mutate: CreateUser, isPending } = useCreateUser({
     onSuccess: () => {
       enqueueSnackbar('User created successfully', { variant: 'success' });
       reset();
       refetch();
+      router.push(returnTo || paths.dashboard.user.list);
     },
     onError: (error) => {
       enqueueSnackbar(`Error: ${error.message}`, { variant: 'error' });
@@ -42,6 +53,7 @@ export default function UserNewEditForm({ currentUser }) {
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').max(100, 'Name must be at most 100 characters'),
+    instansi: Yup.string().required('Instansi is required'),
     email: Yup.string()
       .required('Email is required')
       .email('Email must be a valid email address')
@@ -68,6 +80,7 @@ export default function UserNewEditForm({ currentUser }) {
       password: '',
       confirmPassword: '',
       role: currentUser?.role || '',
+      instansi: currentUser?.instansiId || '',
     }),
     [currentUser]
   );
@@ -82,7 +95,11 @@ export default function UserNewEditForm({ currentUser }) {
   const onSubmit = async (data) => {
     try {
       const { confirmPassword, ...restData } = data;
-      const payload = { ...restData, password_confirmation: confirmPassword };
+      const payload = {
+        ...restData,
+        password_confirmation: confirmPassword,
+        instance_id: restData.instansi,
+      };
       CreateUser(payload);
     } catch (error) {
       console.error(error);
@@ -107,7 +124,20 @@ export default function UserNewEditForm({ currentUser }) {
               <RHFTextField name="email" label="Email Address" />
               <RHFTextField name="password" label="Password" type="password" />
               <RHFTextField name="confirmPassword" label="Confirm Password" type="password" />
-              <RHFTextField name="role" label="Role" />
+              <RHFSelect name="role" label="Role">
+                <MenuItem>admin</MenuItem>
+                <MenuItem>user</MenuItem>
+              </RHFSelect>
+
+              {/* Dropdown untuk Instansi */}
+              <RHFSelect name="instansi" label="Instansi" disabled={isLoadingInstansi}>
+                {!isLoadingInstansi &&
+                  instansiList?.data?.map((instansi) => (
+                    <MenuItem key={instansi.id} value={instansi.id}>
+                      {instansi.name} {/* Nama instansi yang ditampilkan */}
+                    </MenuItem>
+                  ))}
+              </RHFSelect>
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
