@@ -15,7 +15,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 import { useSettingsContext } from 'src/components/settings';
-import { AuthContext } from 'src/auth/context/jwt/auth-context';
 import { SeoIllustration } from 'src/assets/illustrations';
 import AppWidgetSummary from '../app-widget-summary';
 import AppWelcome from '../app-welcome';
@@ -39,8 +38,10 @@ import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import FileManagerNewFolderDialog from 'src/sections/file-manager/file-manager-new-folder-dialog';
 import { _files } from 'src/_mock';
-import { Stack } from '@mui/system';
+import { Box, Stack } from '@mui/system';
 import FileRecentItem from 'src/sections/file-manager/file-recent-item';
+import { Link } from 'react-router-dom';
+import { AuthContext } from 'src/auth/context/jwt/auth-context';
 export default function OverviewAppView() {
   const { user } = useContext(AuthContext);
   const theme = useTheme();
@@ -52,14 +53,21 @@ export default function OverviewAppView() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selected, setSelected] = useState([]);
   const [editFolderId, setEditFolderId] = useState(null);
-
   const { register, handleSubmit, reset, setValue } = useForm();
+  const [tagsInput, setTagsInput] = useState(''); // To handle input as a string
   const { mutate: CreateFolder, isPending } = useMutationFolder({
     onSuccess: () => {
       enqueueSnackbar('Folder Created Successfully');
       reset();
       refetch();
       handleClosed();
+    },
+    onError: (error) => {
+      if (error.errors.description) {
+        enqueueSnackbar(`Gagal membuat folder: ${error.errors.description}`, { variant: 'error' });
+      } else {
+        enqueueSnackbar(`Gagal membuat folder: ${error.errors.tags}`, { variant: 'error' });
+      }
     },
   });
 
@@ -88,8 +96,8 @@ export default function OverviewAppView() {
   });
 
   const { data, isLoading, refetch, isFetching } = useFetchFolder(); // Fetch Folder
-
-  console.log(data.files);
+  const { files } = data;
+  console.log(files);
 
   if (isLoading || isFetching) {
     return (
@@ -167,9 +175,24 @@ export default function OverviewAppView() {
     setSelected(newSelected);
   };
 
+  const handleTagsChange = (event) => {
+    setTagsInput(event.target.value); // Update the tags input string
+  };
   const Onsubmit = (data) => {
-    if (!data.name || data.name.trim() === '') {
-      enqueueSnackbar('Nama folder harus diisi', {
+    // Split tags input by commas, trim whitespace, and filter out empty values
+    const tagsArray = tagsInput
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+
+    const folderData = {
+      name: data.name,
+      description: data.description,
+      tags: tagsArray, // Use the parsed array of tags
+    };
+
+    if (!folderData.name || folderData.name.trim() === '') {
+      enqueueSnackbar('Folder name is required', {
         variant: 'warning',
         anchorOrigin: {
           vertical: 'top',
@@ -178,10 +201,11 @@ export default function OverviewAppView() {
       });
       return;
     }
-    CreateFolder(data);
-    reset();
-  };
 
+    CreateFolder(folderData); // Call the mutation to create the folder
+    reset();
+    setTagsInput(''); // Clear the tags input
+  };
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
@@ -222,8 +246,72 @@ export default function OverviewAppView() {
           />
         </Grid> */}
 
-        {!data.folders ? (
-          <EmptyContent filled title="Folder Kosong" sx={{ py: 10 }} />
+        {data.folders.length === 0 ? (
+          <>
+            <Grid xs={12} md={12} lg={12}>
+              <FileManagerPanel
+                title="Folders"
+                link={paths.dashboard.fileManager}
+                onOpen={handleClickOpened}
+                sx={{ mt: 5 }}
+              />
+              <EmptyContent filled title="Folder Kosong" sx={{ py: 10 }} />
+              <Dialog open={opened} onClose={handleClosed}>
+                <DialogTitle>Create Folder</DialogTitle>
+                <DialogContent>
+                  <form onSubmit={handleSubmit(Onsubmit)}>
+                    <DialogContentText sx={{ mb: 3 }}>
+                      Silahkan masukkan nama folder yang ingin dibuat disini.
+                    </DialogContentText>
+                    <Stack spacing={2}>
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        name="name"
+                        label="Nama Folder"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        {...register('name')}
+                      />
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        name="description"
+                        label="Description"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        {...register('description')}
+                      />
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        name="tags"
+                        label="Tags"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={tagsInput} // Bind the tags input string
+                        onChange={handleTagsChange}
+                      />
+                    </Stack>
+                    <DialogActions>
+                      <Button variant="outlined" onClick={handleClosed}>
+                        Cancel
+                      </Button>
+                      <Button variant="outlined" type="submit">
+                        {isPending ? 'Creating...' : 'Create'}
+                      </Button>
+                    </DialogActions>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </Grid>
+          </>
         ) : (
           <Grid xs={12} md={12} lg={12}>
             <FileManagerPanel
@@ -239,17 +327,42 @@ export default function OverviewAppView() {
                   <DialogContentText sx={{ mb: 3 }}>
                     Silahkan masukkan nama folder yang ingin dibuat disini.
                   </DialogContentText>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    name="name"
-                    label="Nama Folder"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    {...register('name')}
-                  />
+                  <Stack spacing={2}>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      name="name"
+                      label="Nama Folder"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      {...register('name')}
+                    />
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      name="description"
+                      label="Description"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      {...register('description')}
+                    />
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      name="tags"
+                      label="Tags"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      value={tagsInput} // Bind the tags input string
+                      onChange={handleTagsChange}
+                    />
+                  </Stack>
                   <DialogActions>
                     <Button variant="outlined" onClick={handleClosed}>
                       Cancel
@@ -385,7 +498,13 @@ export default function OverviewAppView() {
                       <TableCell>{idx + 1}</TableCell>
                       <TableCell sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <img src={imageFolder} alt="folder" />
-                        {folder.name}
+                        {/* Bungkus hanya pada TableCell yang menampilkan nama */}
+                        <Link
+                          to={`file-manager/info/${folder.folder_id}`}
+                          style={{ textDecoration: 'none', color: 'inherit' }}
+                        >
+                          {folder.name}
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -394,7 +513,7 @@ export default function OverviewAppView() {
             </TableContainer>
           </Grid>
         )}
-        <Grid xs={12} md={12} lg={12}>
+        <Grid xs={12} md={12} lg={12} sx={{ mt: 10 }}>
           <FileManagerPanel
             title="Files"
             link={paths.dashboard.fileManager}
@@ -406,25 +525,17 @@ export default function OverviewAppView() {
             open={open} // Use the same state
             onClose={handleClose} // Ensure the dialog can close properly
           />
+
           <Stack spacing={2}>
-            {_files.map((file) => (
+            {files.map((file) => (
               <FileRecentItem
                 key={file.id}
                 file={file}
                 onDelete={() => console.info('DELETE', file.id)}
               />
             ))}
+            {/* //file recent item mengirim data ke yang lain */}
           </Stack>
-        </Grid>
-        <Grid xs={12} md={12} lg={12}>
-          {data.files.slice(0, 5).map((file, id) => (
-            <>
-              <Typography variant="h5">{file.name}</Typography>
-              <Typography variant="h5">{file.size}</Typography>
-              <Typography variant="h5">{file.mime_type}</Typography>
-              <img src={`http://127.0.0.1:8000/app/storage${file.path}`} alt="gambar" />
-            </>
-          ))}
         </Grid>
       </Grid>
     </Container>

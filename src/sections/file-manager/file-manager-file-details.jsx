@@ -50,7 +50,7 @@ export default function FileManagerFileDetails({
 
   const [inviteEmail, setInviteEmail] = useState('');
 
-  const [tags, setTags] = useState(item.tags.slice(0, 3));
+  const [tags, setTags] = useState(item.tags);
 
   const handleChangeInvite = useCallback((event) => {
     setInviteEmail(event.target.value);
@@ -80,9 +80,9 @@ export default function FileManagerFileDetails({
         <Autocomplete
           multiple
           freeSolo
-          options={item.tags.map((option) => option)}
+          // options={item.tags.map((option) => option)} //komen jika tidak ada tags nya
           getOptionLabel={(option) => option}
-          defaultValue={item.tags.slice(0, 3)}
+          defaultValue={item.tags}
           value={tags}
           onChange={(event, newValue) => {
             handleChangeTags(newValue);

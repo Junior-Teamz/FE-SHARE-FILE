@@ -124,11 +124,11 @@ export function fileNameByUrl(fileUrl) {
 // ----------------------------------------------------------------------
 
 export function fileData(file) {
-  console.log(file);
+  // console.log(file);
   // Url
   if (typeof file === 'string') {
     return {
-      // key: file,
+      key: file,
       preview: file,
       name: fileNameByUrl(file),
       type: fileTypeByUrl(file),
@@ -137,13 +137,13 @@ export function fileData(file) {
 
   // File
   return {
-    // key: file.preview,
+    key: file.preview,
     name: file.name,
     size: file.size,
     path: file.path,
-    type: file.mime_type,
-    // preview: file.preview,
-    // lastModified: file.lastModified,
-    // lastModifiedDate: file.lastModifiedDate,
+    type: file.type,
+    preview: file.preview,
+    lastModified: file.lastModified,
+    lastModifiedDate: file.lastModifiedDate,
   };
 }

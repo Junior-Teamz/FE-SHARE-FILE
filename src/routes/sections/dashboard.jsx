@@ -6,6 +6,7 @@ import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 // components
 import { LoadingScreen } from 'src/components/loading-screen';
+import { FIleManagerDetail } from 'src/sections/file-manager/view/file-manager-detail';
 
 // ----------------------------------------------------------------------
 
@@ -147,14 +148,20 @@ export const dashboardRoutes = [
       // {
       //   path: 'tour',
       //   children: [
-      //     { element: <TourListPage />, index: true },
+      //
       //     { path: 'list', element: <TourListPage /> },
       //     { path: ':id', element: <TourDetailsPage /> },
       //     { path: 'new', element: <TourCreatePage /> },
       //     { path: ':id/edit', element: <TourEditPage /> },
       //   ],
       // },
-      { path: 'file-manager', element: <FileManagerPage /> },
+      {
+        path: 'file-manager',
+        children: [
+          { element: <FileManagerPage />, index: true },
+          { path: 'info/:id', element: <FIleManagerDetail /> },
+        ],
+      },
       // { path: 'mail', element: <MailPage /> },
       // { path: 'chat', element: <ChatPage /> },
       // { path: 'calendar', element: <CalendarPage /> },

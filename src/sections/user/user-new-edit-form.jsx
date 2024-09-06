@@ -12,14 +12,24 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { useCreateUser } from './view/UserManagement';
 import { Button } from '@mui/material';
+import { paths } from 'src/routes/paths';
+import { useRouter, useSearchParams } from 'src/routes/hooks';
 
 export default function UserNewEditForm({ currentUser }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get('returnTo');
   const { enqueueSnackbar } = useSnackbar(); // Initialize useSnackbar
-  const { mutate: CreateUser, isLoading, isPending } = useCreateUser({
+  const {
+    mutate: CreateUser,
+    isLoading,
+    isPending,
+  } = useCreateUser({
     onSuccess: () => {
       enqueueSnackbar('User created successfully', { variant: 'success' });
       reset();
       refetch();
+      router.push(returnTo || paths.dashboard.user.list);
     },
     onError: (error) => {
       enqueueSnackbar(`Error: ${error.message}`, { variant: 'error' });
