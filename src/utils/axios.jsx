@@ -55,10 +55,10 @@ export const endpoints = {
     delete: '/api/admin/users/delete_user',
   },
   instance:{
-    list:'api/admin/instansi',
-    create:'api/admin/instansi/create',
-    update:'api/admin/instansi/update',
-    delete:'api/admin/instansi/delete'
+    list:'api/admin/instance/index',
+    create:'api/admin/instance/create',
+    update:'api/admin/instance/update',
+    delete:'api/admin/instance/delete'
   },
   post: {
     list: '/api/post/list',

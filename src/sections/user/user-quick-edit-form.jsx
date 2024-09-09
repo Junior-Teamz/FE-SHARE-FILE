@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEditUser } from './view/UserManagement';
+import { useEffect } from 'react';
 // @mui
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Alert,
@@ -14,6 +13,10 @@ import {
   DialogTitle,
   DialogActions,
   DialogContent,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from '@mui/material';
 // components
 import { useSnackbar } from 'src/components/snackbar';
@@ -21,77 +24,86 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
-export default function UserQuickEditForm({ currentUser, open, onClose }) {
+export default function UserQuickEditForm({ currentUser, open, onClose, instances, onRefetch }) {
   const { enqueueSnackbar } = useSnackbar();
-
-  // Validation Schema with password, confirm password, role, and company fields
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    email: Yup.string()
-      .required('Email is required')
-      .email('Email must be a valid email address'),
-    // company: Yup.string().required('Company is required'),
-    // role: Yup.string().required('Role is required'),
-    password: Yup.string()
-      .nullable()
-      .min(8, 'Password should be at least 8 characters'),
-    confirmPassword: Yup.string()
-      .nullable()
-      .when('password', {
-        is: (password) => password && password.length > 0,
-        then: Yup.string()
-          .required('Please confirm your password')
-          .oneOf([Yup.ref('password')], 'Passwords must match'),
-      }),
-  });
-
-  // Default form values
-  const defaultValues = useMemo(
-    () => ({
-      name: currentUser?.name || '',
-      email: currentUser?.email || '',
-      // company: currentUser?.company || '',
-      // role: currentUser?.role || '',
-      password: '', // Password field remains empty for user to fill
-      confirmPassword: '', // Confirm password field remains empty
-    }),
-    [currentUser]
-  );
-
-  // API call for editing user
-  const { mutate: editUser, isLoading: loadingEditUser } = useEditUser({
+  const { mutate: editUser, isPending } = useEditUser({
     onSuccess: () => {
-      enqueueSnackbar('User berhasil diupdate', { variant: 'success' });
-      onClose(); // Close dialog after successful update
+      enqueueSnackbar('User updated successfully', { variant: 'success' });
+      resetForm({
+        name: '',
+        email: '',
+        instance_id: '',
+        password: '',
+        confirmPassword: '',
+      }); // Reset form with new default values
+      if (onRefetch) onRefetch(); // Refetch user list if onRefetch callback is provided
+      onClose(); // Close the dialog on success
     },
     onError: (error) => {
-      enqueueSnackbar(`Gagal update user: ${error.message}`, { variant: 'error' });
+      enqueueSnackbar('Error updating user', { variant: 'error' });
+      console.error('Error updating user', error);
     },
+  });
+
+  // Validation Schema
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    password: Yup.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    instance_id: Yup.string().required('Instansi is required'), // Use instance_id here
   });
 
   // React Hook Form methods
   const methods = useForm({
     resolver: yupResolver(validationSchema),
-    defaultValues,
+    defaultValues: {
+      name: '',
+      email: '',
+      instance_id: '',
+      password: '',
+      confirmPassword: '',
+    },
   });
 
   const {
-    reset,
+    reset: resetForm, // Destructure reset to use as resetForm
+    setValue,
     handleSubmit,
+    watch,
     formState: { isSubmitting },
   } = methods;
+
+  // Set initial form data when `currentUser` changes
+  useEffect(() => {
+    if (currentUser) {
+      resetForm({
+        name: currentUser.name,
+        email: currentUser.email,
+        instance_id: currentUser.instansi?.id || '',
+        password: '',
+        confirmPassword: '',
+      }); // Reset the form with current user's data
+    }
+  }, [currentUser, resetForm]);
 
   // Form submission handler
   const onSubmit = (data) => {
     const userData = {
       name: data.name,
       email: data.email,
-      // company: data.company,
-      // role: data.role,
-      ...(data.password ? { password: data.password } : {}) // Only send password if it's filled
+      instance_id: data.instance_id, // Use instance_id here
+      ...(data.password ? { password: data.password } : {}),
+      password_confirmation: data.confirmPassword, // Ensure confirmPassword is included if password is provided
     };
-    editUser(userData); // Submit form data to editUser API
-    reset();
+
+    // Remove password_confirmation if no password change
+    if (!data.password) {
+      delete userData.password_confirmation;
+    }
+
+    // Call editUser with userId and userData
+    editUser({ userId: currentUser.id, data: userData });
   };
 
   return (
@@ -123,9 +135,32 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
           >
             <RHFTextField name="name" label="Full Name" />
             <RHFTextField name="email" label="Email Address" />
-            {/* <RHFTextField name="company" label="Company" />
-            <RHFTextField name="role" label="Role" /> */}
-            <RHFTextField name="password" label="Password (Leave empty if not changing)" type="password" />
+
+            {/* Dropdown to select instansi */}
+            <FormControl fullWidth>
+              <InputLabel id="instansi-label">Instansi</InputLabel>
+              <Select
+                labelId="instansi-label"
+                id="instance_id" // Make sure the id matches the field name
+                name="instance_id" // Use instance_id as the name
+                label="Instansi"
+                value={watch('instance_id')} // Bind the selected value
+                onChange={(e) => setValue('instance_id', e.target.value)} // Set instance_id on change
+              >
+                {instances &&
+                  instances.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      {item.name} {/* Display instansi name */}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+
+            <RHFTextField
+              name="password"
+              label="Password "
+              type="password"
+            />
             <RHFTextField name="confirmPassword" label="Confirm Password" type="password" />
           </Box>
         </DialogContent>
@@ -135,9 +170,9 @@ export default function UserQuickEditForm({ currentUser, open, onClose }) {
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting || loadingEditUser}>
-            Update
-          </LoadingButton>
+          <Button variant="contained" type="submit">
+           {isPending ? "Update User...." : "Update User"}
+          </Button>
         </DialogActions>
       </FormProvider>
     </Dialog>
@@ -148,4 +183,6 @@ UserQuickEditForm.propTypes = {
   currentUser: PropTypes.object,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  instances: PropTypes.array.isRequired, // Expect an array of instansi objects
+  onRefetch: PropTypes.func, // Callback to refetch user list
 };

@@ -13,7 +13,6 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { ConfirmDialog } from 'src/components/custom-dialog';
@@ -21,8 +20,8 @@ import UserQuickEditForm from './user-quick-edit-form';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, avatarUrl, company, role, email } = row;
+function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, refetch }) {
+  const { name, avatarUrl, instances = [], role, email } = row;
 
   const confirm = useBoolean();
   const quickEdit = useBoolean();
@@ -47,11 +46,23 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         </TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{email}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{company}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{role}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          <Tooltip title="More Action" placement="top">
+          {instances.length > 0
+            ? instances.map((instance) => (
+                <div key={instance.id} value={instance.id}>
+                  {instance.name}
+                </div>
+              ))
+            : 'No Instance'}
+        </TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {Array.isArray(role) ? role.join(', ') : role}
+        </TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          <Tooltip title="More Actions" placement="top">
             <IconButton onClick={popover.onOpen}>
               <Iconify icon="eva:more-vertical-fill" />
             </IconButton>
@@ -59,7 +70,14 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         </TableCell>
       </TableRow>
 
-      <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
+      <UserQuickEditForm
+        currentUser={row}
+        instances={instances}
+        open={quickEdit.value}
+        onRefetch={refetch}
+        onClose={quickEdit.onFalse}
+      />
+
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
@@ -78,7 +96,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         </MenuItem>
         <MenuItem
           onClick={() => {
-            quickEdit.onTrue(); // Memindahkan fungsi onTrue ke sini
+            quickEdit.onTrue();
             popover.onClose();
           }}
         >
@@ -103,15 +121,24 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 }
 
 UserTableRow.propTypes = {
-  onDeleteRow: PropTypes.func,
-  onEditRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
+  onDeleteRow: PropTypes.func.isRequired,
+  onEditRow: PropTypes.func.isRequired,
+  onSelectRow: PropTypes.func.isRequired,
   row: PropTypes.shape({
     name: PropTypes.string.isRequired,
     avatarUrl: PropTypes.string,
-    company: PropTypes.string,
-    role: PropTypes.string,
+    instance_data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        address: PropTypes.string,
+      })
+    ),
+    role: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
     email: PropTypes.string.isRequired,
   }).isRequired,
-  selected: PropTypes.bool,
+  selected: PropTypes.bool.isRequired,
+  refetch: PropTypes.func.isRequired,
 };
+
+export default UserTableRow;

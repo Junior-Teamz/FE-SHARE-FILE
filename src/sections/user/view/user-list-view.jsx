@@ -8,7 +8,7 @@ import {
   TableBody,
   IconButton,
   TableContainer,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
@@ -36,7 +36,7 @@ import debounce from 'lodash/debounce';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', width: 180 },
   { id: 'email', label: 'Email', width: 240 },
-  { id: 'company', label: 'Company', width: 180 },
+  { id: 'instance', label: 'Instansi', width: 180 },
   { id: 'role', label: 'Role', width: 180 },
   { id: 'action', label: 'Action', width: 120 },
 ];
@@ -52,7 +52,6 @@ export default function UserListView() {
 
   const { data, isLoading, refetch, isFetching } = useIndexUser(filters);
 
-  // Debounced function to handle search queries
   const debouncedSearch = useCallback(
     debounce((query) => {
       setFilters((prev) => ({
@@ -63,14 +62,12 @@ export default function UserListView() {
     []
   );
 
-  // Update the search term and trigger debounced search
   const handleSearchChange = (event) => {
     const { value } = event.target;
     setSearchTerm(value);
     debouncedSearch(value);
   };
 
-  // Define tableData based on data from query
   const tableData = data?.data || [];
 
   const handleFilters = (field, value) => {
@@ -97,6 +94,7 @@ export default function UserListView() {
   const { mutate: deleteUser } = useDeleteUser({
     onSuccess: () => {
       refetch();
+      enqueueSnackbar('User berhasil dihapus', { variant: 'success' });
       confirm.onFalse();
     },
     onError: (error) => console.error(`Failed to delete user: ${error.message}`),
@@ -104,7 +102,8 @@ export default function UserListView() {
 
   const handleDeleteRow = useCallback((ids) => deleteUser(ids), [deleteUser]);
   const handleEditRow = useCallback((id) => {
-    // Implement edit functionality here
+    // Implement edit functionality here, e.g., redirect to edit page
+    console.log(`Edit user with ID: ${id}`);
   }, []);
 
   return (
@@ -133,17 +132,13 @@ export default function UserListView() {
         <Card>
           <UserTableToolbar
             filters={filters}
-            onFilters={handleFilters} // Use the handleFilters function
-            onSearchChange={handleSearchChange} // Pass the search change handler
-            searchTerm={searchTerm} // Pass the current search term
+            onFilters={handleFilters}
+            onSearchChange={handleSearchChange}
+            searchTerm={searchTerm}
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {isFetching && (
-              <CircularProgress
-                sx={{ position: 'absolute', top: 20, right: 20 }}
-              />
-            )}
+            {isFetching && <CircularProgress sx={{ position: 'absolute', top: 20, right: 20 }} />}
 
             <TableSelectedAction
               dense={table.dense}
@@ -190,6 +185,7 @@ export default function UserListView() {
                       onSelectRow={() => table.onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow([row.id])}
                       onEditRow={() => handleEditRow(row.id)}
+                      refetch={refetch} // Pass refetch here
                     />
                   ))}
 

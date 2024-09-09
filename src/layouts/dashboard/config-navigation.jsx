@@ -105,7 +105,7 @@ export function useNavData() {
               // { title: t('cards'), path: paths.dashboard.user.cards },
               { title: t('list user'), path: paths.dashboard.user.list },
               { title: t('create user'), path: paths.dashboard.user.new },
-              { title: t('edit'), path: paths.dashboard.user.demo.edit },
+              // { title: t('edit'), path: paths.dashboard.user.demo.edit },
               { title: t('account'), path: paths.dashboard.user.account },
             ],
           },

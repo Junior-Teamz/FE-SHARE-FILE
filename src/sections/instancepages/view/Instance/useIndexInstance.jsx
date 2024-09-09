@@ -9,6 +9,7 @@ export const useIndexInstance = (filters) => {
         params: filters, 
       });
       return response.data; 
+      
     },
     enabled: !!filters, 
   });

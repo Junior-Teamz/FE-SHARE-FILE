@@ -32,10 +32,7 @@ export default function InstanceCreateForm() {
   // Validasi menggunakan Yup
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').max(100, 'Name must be at most 100 characters'),
-    email: Yup.string()
-      .required('Email is required')
-      .email('Email must be a valid email address')
-      .matches(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/, 'Invalid email format'),
+  
     address: Yup.string()
       .required('Address is required')
       .max(100, 'Address must be at most 100 characters'),
@@ -45,7 +42,7 @@ export default function InstanceCreateForm() {
     resolver: yupResolver(NewUserSchema),
     defaultValues: {
       name: '',
-      email: '',
+  
       address: '',
     },
   });
@@ -75,7 +72,7 @@ export default function InstanceCreateForm() {
               }}
             >
               <RHFTextField name="name" label="Full Name" />
-              <RHFTextField name="email" label="Email Address" />
+
               <RHFTextField name="address" label="Address" />
             </Box>
 

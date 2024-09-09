@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
@@ -11,7 +11,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FormProvider, { RHFTextField, RHFSelect } from 'src/components/hook-form';
 import { useCreateUser } from './view/UserManagement';
 import { Button, MenuItem } from '@mui/material';
-import { useIndexInstance } from '../instancepages/view/Instance'; // Import hook useIndexInstance
+import { useIndexInstance } from '../instancepages/view/Instance';
 import { paths } from 'src/routes/paths';
 import { useRouter, useSearchParams } from 'src/routes/hooks';
 
@@ -30,7 +30,6 @@ export default function UserNewEditForm({ currentUser }) {
       enqueueSnackbar('User created successfully', { variant: 'success' });
       reset();
       refetch();
-      router.push(returnTo || paths.dashboard.user.list);
       router.push(returnTo || paths.dashboard.user.list);
     },
     onError: (error) => {
@@ -126,8 +125,8 @@ export default function UserNewEditForm({ currentUser }) {
               <RHFTextField name="password" label="Password" type="password" />
               <RHFTextField name="confirmPassword" label="Confirm Password" type="password" />
               <RHFSelect name="role" label="Role">
-                <MenuItem>admin</MenuItem>
-                <MenuItem>user</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="user">User</MenuItem>
               </RHFSelect>
 
               {/* Dropdown untuk Instansi */}

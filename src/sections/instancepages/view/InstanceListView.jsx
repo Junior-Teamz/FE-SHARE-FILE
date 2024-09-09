@@ -55,7 +55,7 @@ export default function InstanceListView() {
     onSuccess: () => {
       enqueueSnackbar('Instansi Berhasil Diperbarui', { variant: 'success' });
       refetch();
-      
+      onclose()
     },
     onError: (error) => {
       enqueueSnackbar(`Gagal memperbarui instansi: ${error.message}`, { variant: 'error' });
@@ -77,7 +77,7 @@ export default function InstanceListView() {
     const instanceToEdit = instances.find((inst) => inst.id === id);
     if (instanceToEdit) {
       setValue('name', instanceToEdit.name);
-      setValue('email', instanceToEdit.email);
+
       setValue('address', instanceToEdit.address);
       setPopover((prev) => ({ ...prev, currentId: id }));
       setEditDialogOpen(true);
@@ -104,7 +104,6 @@ export default function InstanceListView() {
   };
 
   const handleEditSubmit = (data) => {
-    console.log('Current ID:', popover.currentId); // Debugging ID
     if (popover.currentId) {
       editInstansi({ instansiId: popover.currentId, data });
       setEditDialogOpen(false);
@@ -144,7 +143,7 @@ export default function InstanceListView() {
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
-                    <TableCell>Email</TableCell>
+
                     <TableCell>Address</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
@@ -155,8 +154,26 @@ export default function InstanceListView() {
                     .map((instance) => (
                       <TableRow key={instance.id}>
                         <TableCell>{instance.name}</TableCell>
-                        <TableCell>{instance.email}</TableCell>
-                        <TableCell>{instance.address}</TableCell>
+
+                        <TableCell sx={{ maxWidth: 200, padding: '0', whiteSpace: 'nowrap' }}>
+                          <div
+                            style={{ overflowX: 'auto', maxWidth: '100%', display: 'inline-block' }}
+                          >
+                            {instance.address}
+                          </div>
+                        </TableCell>
+
+                        {/* <TableCell//ini titik  titik teks nya
+                          sx={{
+                            maxWidth: 200, // Tentukan batas lebar maksimum untuk kolom address
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {instance.address}
+                        </TableCell> */}
+
                         <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
                           <Tooltip title="More Actions" placement="top">
                             <IconButton onClick={(event) => handlePopoverOpen(event, instance.id)}>
@@ -200,16 +217,7 @@ export default function InstanceListView() {
                 variant="outlined"
                 {...register('name')}
               />
-              <TextField
-                margin="dense"
-                id="email"
-                name="email"
-                label="Email Instance"
-                type="email"
-                fullWidth
-                variant="outlined"
-                {...register('email')}
-              />
+
               <TextField
                 margin="dense"
                 id="address"
@@ -232,11 +240,10 @@ export default function InstanceListView() {
           </DialogContent>
         </Dialog>
 
-        {/* Popover for actions */}
         <CustomPopover
-          open={popover.open}
+          open={popover.open} // boolean for open
+          anchorEl={popover.anchorEl} // element for anchorEl
           onClose={handlePopoverClose}
-          anchorEl={popover.anchorEl}
           arrow="right-top"
           sx={{ width: 140 }}
         >
