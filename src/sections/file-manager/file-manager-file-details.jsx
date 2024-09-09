@@ -39,6 +39,7 @@ export default function FileManagerFileDetails({
   ...other
 }) {
   const { name, size, url, type, shared, modifiedAt } = item;
+  console.log(item);
 
   const hasShared = shared && !!shared.length;
 

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -37,11 +37,15 @@ import { paths } from 'src/routes/paths';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import FileManagerNewFolderDialog from 'src/sections/file-manager/file-manager-new-folder-dialog';
-import { _files } from 'src/_mock';
+import { _allFiles, _files, _folders } from 'src/_mock';
 import { Box, Stack } from '@mui/system';
 import FileRecentItem from 'src/sections/file-manager/file-recent-item';
 import { Link } from 'react-router-dom';
 import { AuthContext } from 'src/auth/context/jwt/auth-context';
+import axiosInstance from 'src/utils/axios';
+import FileManagerFolderItem from 'src/sections/file-manager/file-manager-folder-item';
+import FileManagerTable from 'src/sections/file-manager/file-manager-table';
+import { table } from 'src/theme/overrides/components/table';
 export default function OverviewAppView() {
   const { user } = useContext(AuthContext);
   const theme = useTheme();
@@ -54,6 +58,7 @@ export default function OverviewAppView() {
   const [selected, setSelected] = useState([]);
   const [editFolderId, setEditFolderId] = useState(null);
   const { register, handleSubmit, reset, setValue } = useForm();
+  const [tableData, setTableData] = useState(_allFiles);
   const [tagsInput, setTagsInput] = useState(''); // To handle input as a string
   const { mutate: CreateFolder, isPending } = useMutationFolder({
     onSuccess: () => {
@@ -64,9 +69,7 @@ export default function OverviewAppView() {
     },
     onError: (error) => {
       if (error.errors.description) {
-        enqueueSnackbar(`Gagal membuat folder: ${error.errors.description}`, { variant: 'error' });
-      } else {
-        enqueueSnackbar(`Gagal membuat folder: ${error.errors.tags}`, { variant: 'error' });
+        return enqueueSnackbar(`Gagal membuat folder: ${error.errors.tags}`, { variant: 'error' });
       }
     },
   });
@@ -187,7 +190,6 @@ export default function OverviewAppView() {
 
     const folderData = {
       name: data.name,
-      description: data.description,
       tags: tagsArray, // Use the parsed array of tags
     };
 
@@ -279,17 +281,6 @@ export default function OverviewAppView() {
                         autoFocus
                         margin="dense"
                         id="name"
-                        name="description"
-                        label="Description"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        {...register('description')}
-                      />
-                      <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
                         name="tags"
                         label="Tags"
                         type="text"
@@ -338,17 +329,6 @@ export default function OverviewAppView() {
                       fullWidth
                       variant="outlined"
                       {...register('name')}
-                    />
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="name"
-                      name="description"
-                      label="Description"
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      {...register('description')}
                     />
                     <TextField
                       autoFocus

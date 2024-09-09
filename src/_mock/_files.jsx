@@ -112,10 +112,10 @@ export const _files = FILES.map((name, index) => ({
   name,
   url: URLS[index],
   shared: shared(index),
-  // tags: _tags.slice(0, 5),
+  tags: _tags.slice(0, 5),
   size: GB / ((index + 1) * 500),
-  // createdAt: _mock.time(index),
-  // modifiedAt: _mock.time(index),
+  createdAt: _mock.time(index),
+  modifiedAt: _mock.time(index),
   type: `${name.split('.').pop()}`,
   isFavorited: _mock.boolean(index + 1),
 }));
