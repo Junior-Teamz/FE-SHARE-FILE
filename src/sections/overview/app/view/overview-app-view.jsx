@@ -154,12 +154,20 @@ export default function OverviewAppView() {
       });
       return;
     }
-    editFolder({ folderId: editFolderId, data: { name: data.name } });
+
+    // Ensure tags are handled correctly
+    const tagsArray = tagsInput
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+
+    editFolder({ folderId: editFolderId, data: { name: data.name, tags: tagsArray } });
   };
 
   const handleSelectAll = (event) => {
     if (event.target.checked) {
-      setSelected(data.map((folder) => folder.folder_id));
+      const folders = Array.isArray(data?.folders) ? data.folders : [];
+      setSelected(folders.map((folder) => folder.folder_id));
     } else {
       setSelected([]);
     }
@@ -208,6 +216,7 @@ export default function OverviewAppView() {
     reset();
     setTagsInput(''); // Clear the tags input
   };
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
@@ -311,49 +320,48 @@ export default function OverviewAppView() {
               onOpen={handleClickOpened}
               sx={{ mt: 5 }}
             />
-            <Dialog open={opened} onClose={handleClosed}>
-              <DialogTitle>Create Folder</DialogTitle>
+            <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
+              <DialogTitle>Edit Folder</DialogTitle>
               <DialogContent>
-                <form onSubmit={handleSubmit(Onsubmit)}>
+                <form onSubmit={handleSubmit(handleEditSubmit)}>
                   <DialogContentText sx={{ mb: 3 }}>
-                    Silahkan masukkan nama folder yang ingin dibuat disini.
+                    Silahkan masukkan nama folder yang ingin diubah disini.
                   </DialogContentText>
-                  <Stack spacing={2}>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="name"
-                      name="name"
-                      label="Nama Folder"
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      {...register('name')}
-                    />
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="name"
-                      name="tags"
-                      label="Tags"
-                      type="text"
-                      fullWidth
-                      variant="outlined"
-                      value={tagsInput} // Bind the tags input string
-                      onChange={handleTagsChange}
-                    />
-                  </Stack>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    name="name"
+                    label="Nama Folder"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    {...register('name')}
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="tags"
+                    name="tags"
+                    label="Tags"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    value={tagsInput} // Bind the tags input string
+                    onChange={handleTagsChange}
+                  />
                   <DialogActions>
-                    <Button variant="outlined" onClick={handleClosed}>
+                    <Button variant="outlined" onClick={handleEditDialogClose}>
                       Cancel
                     </Button>
                     <Button variant="outlined" type="submit">
-                      {isPending ? 'Creating...' : 'Create'}
+                      {loadingEditFolder ? 'Editing' : 'Edit'}
                     </Button>
                   </DialogActions>
                 </form>
               </DialogContent>
             </Dialog>
+
             <Dialog open={deleteConfirmOpen} onClose={handleDeleteConfirmClose}>
               <DialogTitle>Konfirmasi Penghapusan</DialogTitle>
               <DialogContent>
@@ -383,6 +391,18 @@ export default function OverviewAppView() {
                     fullWidth
                     variant="outlined"
                     {...register('name')}
+                  />
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    name="tags"
+                    label="Tags"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    value={tagsInput} // Bind the tags input string
+                    onChange={handleTagsChange}
                   />
                   <DialogActions>
                     <Button variant="outlined" onClick={handleEditDialogClose}>

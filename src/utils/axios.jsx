@@ -61,15 +61,15 @@ export const endpoints = {
     update:'api/admin/instance/update',
     delete:'api/admin/instance/delete'
   },
-  post: {
-    list: '/api/post/list',
-    details: '/api/post/details',
-    latest: '/api/post/latest',
-    search: '/api/post/search',
-  },
-  product: {
-    list: '/api/product/list',
-    details: '/api/product/details',
-    search: '/api/product/search',
-  },
+  // post: {
+  //   list: '/api/post/list',
+  //   details: '/api/post/details',
+  //   latest: '/api/post/latest',
+  //   search: '/api/post/search',
+  // },
+  // product: {
+  //   list: '/api/product/list',
+  //   details: '/api/product/details',
+  //   search: '/api/product/search',
+  // },
 };
