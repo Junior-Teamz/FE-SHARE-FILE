@@ -43,6 +43,8 @@ export default function FileRecentItem({ file, onDelete, sx, ...other }) {
 
   const share = useBoolean();
 
+  const edit = useBoolean();
+
   const details = useBoolean();
 
   const favorite = useBoolean(file.isFavorited);
@@ -137,6 +139,7 @@ export default function FileRecentItem({ file, onDelete, sx, ...other }) {
     </AvatarGroup>
   );
 
+
   return (
     <>
       <Stack
@@ -194,6 +197,16 @@ export default function FileRecentItem({ file, onDelete, sx, ...other }) {
           Share
         </MenuItem>
 
+        <MenuItem
+          onClick={() => {
+            popover.onClose();
+            edit.onTrue();
+          }}
+        >
+          <Iconify icon="solar:pen-bold" />
+          Ganti Nama
+        </MenuItem>
+
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem
@@ -230,6 +243,16 @@ export default function FileRecentItem({ file, onDelete, sx, ...other }) {
         onClose={() => {
           share.onFalse();
           setInviteEmail('');
+        }}
+      />
+      <FileManagerShareDialog
+        open={edit.value}
+        shared={file.shared}
+        inviteEmail={inviteEmail}
+        onChangeInvite={handleChangeInvite}
+        onCopyLink={handleCopy}
+        onClose={() => {
+          edit.onFalse();
         }}
       />
     </>

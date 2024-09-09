@@ -3,7 +3,7 @@ import { HOST_API } from 'src/config-global';
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: HOST_API, withCredentials: true });
+const axiosInstance = axios.create({ baseURL: HOST_API });
 
 // Request interceptor (tidak perlu menambahkan header Authorization karena menggunakan cookie HTTP-only)
 axiosInstance.interceptors.request.use(
@@ -33,13 +33,14 @@ export const fetcher = async (args) => {
 
 export const endpoints = {
   auth: {
-    me: '/api/admin/index',
-    login: '/api/login',
-    logout: '/api/logout',
-    register: '/api/auth/register',
+    me: '/api/admin/index/',
+    login: '/api/login/',
+    logout: '/api/logout/',
+    register: '/api/auth/register/',
   },
   files: {
-    upload: '/api/admin/file/upload',
+    upload: '/api/admin/file/upload/',
+    delete: '/api/admin/file/delete/',
   },
   folder: {
     detail: '/api/admin/folder/info/',

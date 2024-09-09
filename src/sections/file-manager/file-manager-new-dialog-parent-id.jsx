@@ -11,16 +11,17 @@ import Dialog from '@mui/material/Dialog';
 // components
 import Iconify from 'src/components/iconify';
 import { Upload } from 'src/components/upload';
-import { useMutationUploadFiles } from './view/folderDetail/useMutationUploadFiles';
 import { enqueueSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
+import { useMutationUploadFilesId } from './view/folderDetail/useMutationUploadFilesId';
 
 // ----------------------------------------------------------------------
 
-export default function FileManagerNewFolderDialog({
+export default function FileManagerNewDialogParent({
   title,
   open,
   onClose,
+  id,
   //
   onCreate,
   onUpdate,
@@ -30,7 +31,6 @@ export default function FileManagerNewFolderDialog({
   ...other
 }) {
   const [files, setFiles] = useState([]);
-  const { register, handleSubmit, reset, setValue } = useForm();
 
   useEffect(() => {
     if (!open) {
@@ -51,7 +51,7 @@ export default function FileManagerNewFolderDialog({
     [files]
   );
 
-  const { mutate: UploadFiles, isPending: loadingUpload } = useMutationUploadFiles({
+  const { mutate: UploadFiles, isPending: loadingUpload } = useMutationUploadFilesId({
     onSuccess: () => {
       enqueueSnackbar('Files Uploaded Successfully');
       handleRemoveAllFiles();
@@ -71,6 +71,7 @@ export default function FileManagerNewFolderDialog({
     const formData = new FormData();
     // If uploading a single file
     formData.append('file', files[0]);
+    formData.append('folder_id', id);
     // For multiple files, you may need to loop over them, but based on your comment,
     // files.forEach((file) => {
     //   formData.append('file', file);
@@ -135,7 +136,7 @@ export default function FileManagerNewFolderDialog({
   );
 }
 
-FileManagerNewFolderDialog.propTypes = {
+FileManagerNewDialogParent.propTypes = {
   folderName: PropTypes.string,
   onChangeFolderName: PropTypes.func,
   onClose: PropTypes.func,
