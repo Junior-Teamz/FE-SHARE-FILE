@@ -27,6 +27,7 @@ export default function FileManagerNewFolderDialog({
   //
   folderName,
   onChangeFolderName,
+  refetch, // Tambahkan refetch prop
   ...other
 }) {
   const [files, setFiles] = useState([]);
@@ -35,8 +36,9 @@ export default function FileManagerNewFolderDialog({
   useEffect(() => {
     if (!open) {
       setFiles([]);
+      reset(); // Reset form when dialog is closed
     }
-  }, [open]);
+  }, [open, reset]);
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -55,7 +57,9 @@ export default function FileManagerNewFolderDialog({
     onSuccess: () => {
       enqueueSnackbar('Files Uploaded Successfully');
       handleRemoveAllFiles();
-      onClose();
+      reset(); // Reset form after successful upload
+      refetch(); // Trigger refetch after successful upload
+      onClose(); // Close dialog after successful upload
     },
     onError: (error) => {
       enqueueSnackbar(error.message, { variant: 'error' });
@@ -71,10 +75,7 @@ export default function FileManagerNewFolderDialog({
     const formData = new FormData();
     // If uploading a single file
     formData.append('file', files[0]);
-    // For multiple files, you may need to loop over them, but based on your comment,
-    // files.forEach((file) => {
-    //   formData.append('file', file);
-    // });
+
     // Trigger file upload via useMutation
     UploadFiles(formData);
   };
@@ -107,7 +108,6 @@ export default function FileManagerNewFolderDialog({
       </DialogContent>
 
       <DialogActions>
-        {/* <form onSubmit={handleSubmit(handleUpload)}> */}
         <Button
           type="submit"
           variant="contained"
@@ -143,4 +143,5 @@ FileManagerNewFolderDialog.propTypes = {
   onUpdate: PropTypes.func,
   open: PropTypes.bool,
   title: PropTypes.string,
+  refetch: PropTypes.func, // Tambahkan prop types untuk refetch
 };

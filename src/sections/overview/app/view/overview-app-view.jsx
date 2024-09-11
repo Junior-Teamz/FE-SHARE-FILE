@@ -524,6 +524,7 @@ export default function OverviewAppView() {
             title="Upload Files"
             open={open} // Use the same state
             onClose={handleClose} // Ensure the dialog can close properly
+            refetch={refetch} // Tambahkan refetch prop
           />
 
           <Stack spacing={2}>

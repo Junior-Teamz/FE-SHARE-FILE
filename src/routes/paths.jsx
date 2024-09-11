@@ -12,6 +12,7 @@ const ROOTS = {
   AUTH: '/auth',
   AUTH_DEMO: '/auth-demo',
   DASHBOARD: '/dashboard',
+  DashboardUser: '/dashboarduser',
 };
 
 // ----------------------------------------------------------------------
@@ -20,7 +21,7 @@ export const paths = {
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
   // pricing: '/pricing',
-  informasi:'/informasi-pengumuman',
+  informasi: '/informasi-pengumuman',
   // payment: '/payment',
   about: '/about-us',
   contact: '/contact-us',
@@ -90,6 +91,9 @@ export const paths = {
     //   verify: `${ROOTS.AUTH_DEMO}/modern/verify`,
     // },
   },
+  dashboarduser: {
+    root: `${ROOTS.DashboardUser}/dashboarduser`,
+  },
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,
@@ -126,7 +130,7 @@ export const paths = {
       list: `${ROOTS.DASHBOARD}/instance/list`,
       create: `${ROOTS.DASHBOARD}/instance/create`,
       edit: `${ROOTS.DASHBOARD}/instance/edit`,
-    }
+    },
     // product: {
     //   root: `${ROOTS.DASHBOARD}/product`,
     //   new: `${ROOTS.DASHBOARD}/product/new`,

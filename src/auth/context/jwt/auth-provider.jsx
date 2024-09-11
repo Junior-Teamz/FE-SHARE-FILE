@@ -4,21 +4,32 @@ import axiosInstance, { endpoints } from 'src/utils/axios';
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
 // ----------------------------------------------------------------------
-
 const initialState = {
   user: null,
+  roles: [], // Tambahkan roles ke state
+  is_superadmin: false, // Tambahkan is_superadmin ke state
   loading: true,
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'INITIAL':
-      return { loading: false, user: action.payload.user };
+      return {
+        loading: false,
+        user: action.payload.user,
+        roles: action.payload.roles,
+        is_superadmin: action.payload.is_superadmin,
+      };
     case 'LOGIN':
     case 'REGISTER':
-      return { ...state, user: action.payload.user };
+      return {
+        ...state,
+        user: action.payload.user,
+        roles: action.payload.roles,
+        is_superadmin: action.payload.is_superadmin,
+      };
     case 'LOGOUT':
-      return { ...state, user: null };
+      return { ...state, user: null, roles: [], is_superadmin: false };
     default:
       return state;
   }
@@ -58,16 +69,37 @@ export function AuthProvider({ children }) {
     initialize();
   }, [initialize]);
 
-  // LOGIN
   const login = useCallback(async (email, password) => {
     const data = { email, password };
 
-    const response = await axiosInstance.post(endpoints.auth.login, data);
-    console.log(response);
-    const { accessToken, user } = response.data;
-    setSession(accessToken); // Set session and add token to axios headers
+    try {
+      const response = await axiosInstance.post(endpoints.auth.login, data);
+      console.log('Login Response in AuthProvider:', response.data);
 
-    dispatch({ type: 'LOGIN', payload: { user } });
+      const { accessToken, roles, is_superadmin, user } = response.data;
+
+      setSession(accessToken); // Set session and add token to axios headers
+
+      dispatch({
+        type: 'LOGIN',
+        payload: {
+          user,
+          roles,
+          is_superadmin,
+        },
+      });
+
+      // Return data to the caller
+      return {
+        accessToken,
+        roles,
+        is_superadmin,
+        user,
+      };
+    } catch (error) {
+      console.error('Login Error:', error);
+      throw error; // Rethrow error to be caught in the caller
+    }
   }, []);
 
   // REGISTER
