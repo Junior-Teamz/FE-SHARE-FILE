@@ -167,7 +167,7 @@ export default function OverviewAppView() {
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       const folders = Array.isArray(data?.folders) ? data.folders : [];
-      setSelected(folders.map((folder) => folder.folder_id));
+      setSelected(folders?.map((folder) => folder.folder_id));
     } else {
       setSelected([]);
     }
@@ -528,7 +528,7 @@ export default function OverviewAppView() {
           />
 
           <Stack spacing={2}>
-            {files.map((file) => (
+            {files?.map((file) => (
               <FileRecentItem
                 key={file.id}
                 file={file}
