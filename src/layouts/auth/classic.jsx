@@ -17,7 +17,7 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { bgGradient } from 'src/theme/css';
 // components
 import Logo from 'src/components/logo';
-import Ukm from '../../../public/logo/ukm.png';
+import Ukm from '../../../public/logo/kemen3.png';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +35,8 @@ export default function AuthClassicLayout({ children, image, title }) {
       alt="Logo"
       sx={{
         zIndex: 9,
-        maxWidth: 200,
+        top: -120,
+        maxWidth: 300,
         position: 'absolute',
         m: { xs: 2, md: 5 },
       }}

@@ -15,7 +15,7 @@ import { RouterLink } from 'src/routes/components';
 import { _socials } from 'src/_mock';
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
-import Kemen from '../../../public/logo/kemen2.png';
+import Kemen from '../../../public/logo/kemen3.png';
 
 const LINKS = [
   {
@@ -71,7 +71,7 @@ export default function Footer() {
             maxWidth: '100%', // Menjaga agar lebar tidak melebihi kontainer
             height: 'auto', // Agar proporsional
             objectFit: 'contain', // Menjaga gambar tetap dalam batas tanpa dipotong
-            mx: { xs: 'auto', md: 0 }, // Memastikan logo terpusat di perangkat kecil
+            mx: { xs: 'auto', md: -1 }, // Memastikan logo terpusat di perangkat kecil
             mt: -16,
             mb: { xs: -8, md: -12 }, // Jarak bawah untuk responsivitas
           }}
@@ -97,8 +97,7 @@ export default function Footer() {
                 mx: { xs: 'auto', md: 'unset' },
               }}
             >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Est nesciunt sit aspernatur
-              corporis fugit ea!
+             Berbagi file dengan cepat dan praktis, kapan saja!
             </Typography>
 
             <Stack

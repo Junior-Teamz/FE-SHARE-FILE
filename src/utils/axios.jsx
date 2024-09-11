@@ -33,14 +33,14 @@ export const fetcher = async (args) => {
 
 export const endpoints = {
   auth: {
-    me: '/api/admin/index/',
-    login: '/api/login/',
-    logout: '/api/logout/',
+    me: '/api/admin/index',
+    login: '/api/login',
+    logout: '/api/logout',
     register: '/api/auth/register/',
   },
   files: {
-    upload: '/api/admin/file/upload/',
-    delete: '/api/admin/file/delete/',
+    upload: '/api/admin/file/upload',
+    delete: '/api/admin/file/delete',
   },
   folder: {
     detail: '/api/admin/folder/info/',

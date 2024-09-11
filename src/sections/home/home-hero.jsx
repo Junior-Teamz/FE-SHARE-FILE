@@ -190,8 +190,7 @@ export default function HomeHero() {
 
       <m.div variants={varFade().in}>
         <Typography variant="body2" sx={{ textAlign: 'center' }}>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi fuga laudantium velit
-          minus, neque sit!
+        Berbagi file dengan cepat dan praktis, kapan saja!
         </Typography>
       </m.div>
 

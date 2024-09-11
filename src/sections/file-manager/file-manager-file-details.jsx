@@ -39,7 +39,13 @@ export default function FileManagerFileDetails({
   ...other
 }) {
   const { name, size, url, type, shared, modifiedAt } = item;
-  console.log(item);
+
+  const items = {
+    id: [1],
+    name: ['coding', 'nugas'],
+  };
+
+  console.log(items.name);
 
   const hasShared = shared && !!shared.length;
 
@@ -51,7 +57,7 @@ export default function FileManagerFileDetails({
 
   const [inviteEmail, setInviteEmail] = useState('');
 
-  const [tags, setTags] = useState(item.tags);
+  const [tags, setTags] = useState(items.name);
 
   const handleChangeInvite = useCallback((event) => {
     setInviteEmail(event.target.value);
@@ -81,7 +87,7 @@ export default function FileManagerFileDetails({
         <Autocomplete
           multiple
           freeSolo
-          // options={item.tags.map((option) => option)} //komen jika tidak ada tags nya
+          options={item.tags.map((option) => option)} //komen jika tidak ada tags nya
           getOptionLabel={(option) => option}
           defaultValue={item.tags}
           value={tags}

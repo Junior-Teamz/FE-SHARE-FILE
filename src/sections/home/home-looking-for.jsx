@@ -15,7 +15,7 @@ export default function HomeLookingFor() {
   const handleCardClick = (label) => {
     const pdfMap = {
       'Permen PANRB No. 43 Tahun 2022': 'Spppd.pdf',
-      'Permen KOPUKM No. 03 Tahun 2023': 'kopukm.pdf'
+      'Permen KOPUKM No. 03 Tahun 2023': 'kopukm.pdf',
     };
     setPdfToShow(pdfMap[label] || null);
   };
@@ -67,11 +67,7 @@ export default function HomeLookingFor() {
                       backgroundColor: 'primary.main',
                       color: 'common.white',
                       cursor: 'pointer',
-                      transition: 'transform 0.3s ease-in-out, backgroundColor 0.3s ease-in-out',
-                      '&:hover': {
-                        transform: 'scale(1.05)',
-                        backgroundColor: 'primary.dark',
-                      },
+                     
                     }}
                   >
                     <Typography variant="h6">{news.title}</Typography>
@@ -130,9 +126,9 @@ export default function HomeLookingFor() {
         </Grid>
 
         {/* PDF Cards */}
-        <Grid container spacing={4}>
+        <Grid container item xs={12} spacing={2}>
           {cards.map((card) => (
-            <Grid item xs={12} md={6} key={card.label}>
+            <Grid item xs={12} sm={6} md={6} key={card.label}>
               <m.div variants={varFade().inUp}>
                 <Stack
                   alignItems="center"
