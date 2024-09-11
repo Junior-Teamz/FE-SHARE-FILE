@@ -40,12 +40,7 @@ export default function FileManagerFileDetails({
 }) {
   const { name, size, url, type, shared, modifiedAt } = item;
 
-  const items = {
-    id: [1],
-    name: ['coding', 'nugas'],
-  };
-
-  console.log(items.name);
+  const items = item?.tags?.map((tag) => tag.name);
 
   const hasShared = shared && !!shared.length;
 
@@ -57,7 +52,7 @@ export default function FileManagerFileDetails({
 
   const [inviteEmail, setInviteEmail] = useState('');
 
-  const [tags, setTags] = useState(items.name);
+  const [tags, setTags] = useState(items);
 
   const handleChangeInvite = useCallback((event) => {
     setInviteEmail(event.target.value);
@@ -87,9 +82,9 @@ export default function FileManagerFileDetails({
         <Autocomplete
           multiple
           freeSolo
-          options={item.tags.map((option) => option)} //komen jika tidak ada tags nya
+          options={item?.tags?.map((option) => option)} //komen jika tidak ada tags nya
           getOptionLabel={(option) => option}
-          defaultValue={item.tags}
+          defaultValue={item?.tags}
           value={tags}
           onChange={(event, newValue) => {
             handleChangeTags(newValue);
@@ -227,12 +222,13 @@ export default function FileManagerFileDetails({
               bgcolor: 'background.neutral',
             }}
           >
-            <FileThumbnail
+            {/* <FileThumbnail
               imageView
               file={type === 'folder' ? type : url}
               sx={{ width: 64, height: 64 }}
               imgSx={{ borderRadius: 1 }}
-            />
+            /> */}
+            {/* DISINI URL KE IMAGE SUPAYA NAMPIL */}
 
             <Typography variant="subtitle1" sx={{ wordBreak: 'break-all' }}>
               {name}
