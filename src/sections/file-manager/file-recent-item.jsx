@@ -49,7 +49,7 @@ export default function FileRecentItem({ file, onDelete, sx, ...other }) {
 
   const favorite = useBoolean(file.isFavorited);
 
-  // console.log(file);
+  console.log(file);
 
   const handleChangeInvite = useCallback((event) => {
     setInviteEmail(event.target.value);
