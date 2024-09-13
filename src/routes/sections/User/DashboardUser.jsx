@@ -5,8 +5,6 @@ import { Outlet } from 'react-router-dom';
 import { LoadingScreen } from 'src/components/loading-screen';
 import IndexPage from '.';
 
-
-
 export const DashboardUser = [
   {
     path: 'dashboarduser',
@@ -17,8 +15,6 @@ export const DashboardUser = [
         </Suspense>
       </AuthGuard>
     ),
-    children:[
-      { element: <IndexPage />, index: true },
-    ]
+    children: [{ element: <IndexPage />, index: true }],
   },
 ];
