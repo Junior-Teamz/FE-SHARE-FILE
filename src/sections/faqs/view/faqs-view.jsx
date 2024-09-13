@@ -22,20 +22,19 @@ export default function FaqsView() {
           position: 'relative',
         }}
       >
-        <FaqsCategory />
+        {/* <FaqsCategory /> */}
 
         <Typography
           variant="h3"
           sx={{
-            my: { xs: 5, md: 10 },
+            my: { xs: 5, md: 10, textAlign: 'center' },
           }}
         >
           Frequently asked questions
         </Typography>
 
         <Box
-          gap={10}
-          display="grid"
+          display="flex"
           gridTemplateColumns={{
             xs: 'repeat(1, 1fr)',
             md: 'repeat(2, 1fr)',
@@ -43,7 +42,7 @@ export default function FaqsView() {
         >
           <FaqsList />
 
-          <FaqsForm />
+          {/* <FaqsForm /> */}
         </Box>
       </Container>
     </>

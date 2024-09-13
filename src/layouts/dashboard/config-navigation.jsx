@@ -7,6 +7,7 @@ import { useLocales } from 'src/locales';
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import SvgColor from 'src/components/svg-color';
+import AddToDriveIcon from '@mui/icons-material/AddToDrive';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +44,7 @@ const ICONS = {
   ecommerce: icon('ic_ecommerce'),
   analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
+  drive: <AddToDriveIcon/>
 };
 
 // ----------------------------------------------------------------------
@@ -58,9 +60,9 @@ export function useNavData() {
         subheader: t('overview'),
         items: [
           {
-            title: t('app'),
+            title: t('My Drive'),
             path: paths.dashboard.root,
-            icon: ICONS.dashboard,
+            icon: ICONS.drive,
           },
           // {
           //   title: t('ecommerce'),

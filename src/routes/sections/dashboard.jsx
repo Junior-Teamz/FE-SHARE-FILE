@@ -137,8 +137,8 @@ export const dashboardRoutes = [
         path: 'file-manager',
         children: [
           { element: <FileManagerPage />, index: true },
-          { path: 'info/:id', element: <FIleManagerDetail /> },
-          { path: 'infosubfolder/:id', element: <FIleManagerDetail /> },
+          { path: 'info\/:id', element: <FIleManagerDetail />},
+          // { path: 'infosubfolder/:id', element: <FIleManagerDetail /> },
         ],
       },
       // { path: 'mail', element: <MailPage /> },

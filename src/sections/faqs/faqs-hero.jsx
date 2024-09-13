@@ -13,6 +13,7 @@ import { bgGradient } from 'src/theme/css';
 // components
 import Iconify from 'src/components/iconify';
 import { MotionContainer, varFade } from 'src/components/animate';
+import { textAlign } from '@mui/system';
 
 // ----------------------------------------------------------------------
 
@@ -41,18 +42,10 @@ export default function FaqsHero() {
           }}
         >
           <div>
-            <TextAnimate text="How" sx={{ color: 'primary.main' }} variants={varFade().inRight} />
-            <br />
-
-            <Stack spacing={2} display="inline-flex" direction="row" sx={{ color: 'common.white' }}>
-              <TextAnimate text="can" />
-              <TextAnimate text="we" />
-              <TextAnimate text="help" />
-              <TextAnimate text="you?" />
-            </Stack>
+            <TextAnimate text="FAQ" sx={{ color: 'primary.main',  }} variants={varFade().inRight} />
           </div>
 
-          <m.div variants={varFade().in}>
+          {/* <m.div variants={varFade().in}>
             <TextField
               fullWidth
               placeholder="Search support..."
@@ -74,7 +67,7 @@ export default function FaqsHero() {
                 },
               }}
             />
-          </m.div>
+          </m.div> */}
         </Box>
       </Container>
     </Box>

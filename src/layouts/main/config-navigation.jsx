@@ -6,6 +6,7 @@ import { PATH_AFTER_LOGIN } from 'src/config-global';
 import Iconify from 'src/components/iconify';
 import LoginIcon from '@mui/icons-material/Login';
 import PeopleIcon from '@mui/icons-material/People';
+import QuizIcon from '@mui/icons-material/Quiz';
 import { useResponsive } from 'src/hooks/use-responsive';
 
 // ----------------------------------------------------------------------
@@ -26,6 +27,10 @@ export const navConfig = [
     icon: <PeopleIcon fontSize="small" />,
     path: paths.about,
   },
+  { title: 'FAQ', 
+    icon: <QuizIcon fontSize="small" />,
+    path: paths.faqs 
+  },
   // {
   //   title: 'Components',
   //   icon: <Iconify icon="solar:atom-bold-duotone" />,
@@ -40,7 +45,7 @@ export const navConfig = [
   //       subheader: 'Other',
   //       items: [
   //         { title: 'Contact us', path: paths.contact },
-  //         { title: 'FAQs', path: paths.faqs },
+  //
   //         // { title: 'Pricing', path: paths.pricing },
   //         // { title: 'Payment', path: paths.payment },
   //         // { title: 'Maintenance', path: paths.maintenance },
