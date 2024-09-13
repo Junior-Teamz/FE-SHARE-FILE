@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { LoadingScreen } from 'src/components/loading-screen';
-import IndexPage from '.';
+import UsersPage from './UsersPage';
 
 export const DashboardUser = [
   {
@@ -15,6 +15,6 @@ export const DashboardUser = [
         </Suspense>
       </AuthGuard>
     ),
-    children: [{ element: <IndexPage />, index: true }],
+    children: [{ element: <UsersPage />, index: true }],
   },
 ];
