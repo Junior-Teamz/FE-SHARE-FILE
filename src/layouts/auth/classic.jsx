@@ -35,7 +35,7 @@ export default function AuthClassicLayout({ children, image, title }) {
       alt="Logo"
       sx={{
         zIndex: 9,
-        top: -120,
+        top: -130,
         maxWidth: 300,
         position: 'absolute',
         m: { xs: 2, md: 5 },

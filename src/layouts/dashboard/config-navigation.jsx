@@ -120,7 +120,6 @@ export function useNavData() {
               { title: t('instance list'), path: paths.dashboard.instance.list },
               { title: t('instance create'), path: paths.dashboard.instance.create },
               // { title: t('instance edit'), path: paths.dashboard.instance.edit },
-       
             ],
           },
 

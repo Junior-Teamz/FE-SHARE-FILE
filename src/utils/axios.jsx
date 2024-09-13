@@ -41,6 +41,11 @@ export const endpoints = {
   files: {
     upload: '/api/admin/file/upload',
     delete: '/api/admin/file/delete',
+    addTag: '/api/admin/file/addTag',
+    removeTag: '/api/admin/file/removeTag',
+  },
+  tag: {
+    create: '/api/admin/tag/create',
   },
   folder: {
     detail: '/api/admin/folder/info/',
@@ -55,11 +60,11 @@ export const endpoints = {
     update: '/api/admin/users/update_user',
     delete: '/api/admin/users/delete_user',
   },
-  instance:{
-    list:'api/admin/instance/index',
-    create:'api/admin/instance/create',
-    update:'api/admin/instance/update',
-    delete:'api/admin/instance/delete'
+  instance: {
+    list: 'api/admin/instance/index',
+    create: 'api/admin/instance/create',
+    update: 'api/admin/instance/update',
+    delete: 'api/admin/instance/delete',
   },
   // post: {
   //   list: '/api/post/list',

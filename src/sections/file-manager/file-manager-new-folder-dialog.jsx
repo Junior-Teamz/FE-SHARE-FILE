@@ -73,10 +73,17 @@ export default function FileManagerNewFolderDialog({
     }
 
     const formData = new FormData();
-    // If uploading a single file
-    formData.append('file', files[0]);
 
-    // Trigger file upload via useMutation
+    // Append each file with the correct field name
+    files.forEach((file) => {
+      formData.append('file[]', file); // Adjust according to server-side expectations
+    });
+
+    // Debugging FormData
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
     UploadFiles(formData);
   };
 

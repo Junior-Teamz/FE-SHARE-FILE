@@ -111,15 +111,16 @@ export default function OverviewAppView() {
       </Container>
     );
   }
-
   const handleClickOpen = () => {
     reset();
-    setOpen(true);
+    setOpen(true); // Untuk FileManagerNewFolderDialog
   };
+
   const handleClickOpened = () => {
     reset();
-    setOpened(true);
+    setOpened(true); // Untuk dialog pembuatan folder lainnya
   };
+
   const handleClose = () => setOpen(false);
   const handleClosed = () => setOpened(false);
   const handleDeleteConfirmOpen = () => setDeleteConfirmOpen(true);
@@ -167,7 +168,7 @@ export default function OverviewAppView() {
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       const folders = Array.isArray(data?.folders) ? data.folders : [];
-      setSelected(folders?.map((folder) => folder.folder_id));
+      setSelected(folders.map((folder) => folder.folder_id));
     } else {
       setSelected([]);
     }
@@ -224,7 +225,7 @@ export default function OverviewAppView() {
           <AppWelcome title={`Welcome back 👋 ${user?.name}`} img={<SeoIllustration />} />
         </Grid>
 
-        <Grid xs={12} md={6}>
+        {/* <Grid xs={12} md={6}>
           <AppWidgetSummary
             title="Total Active Users"
             percent={2.6}
@@ -243,7 +244,7 @@ export default function OverviewAppView() {
               series: [20, 41, 63, 33, 28, 35, 50, 46, 11, 26],
             }}
           />
-        </Grid>
+        </Grid> */}
 
         {/* <Grid xs={12} md={4} sx={{ paddingBottom: '20px' }}>
           <AppWidgetSummary

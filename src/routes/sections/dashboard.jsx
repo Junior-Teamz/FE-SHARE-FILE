@@ -7,7 +7,6 @@ import DashboardLayout from 'src/layouts/dashboard';
 // components
 import { LoadingScreen } from 'src/components/loading-screen';
 import { FIleManagerDetail } from 'src/sections/file-manager/view/file-manager-detail';
-import DashboardUser from './User/DashboardUser';
 
 // ----------------------------------------------------------------------
 
@@ -38,17 +37,6 @@ const FileManagerPage = lazy(() => import('src/pages/dashboard/file-manager'));
 // ----------------------------------------------------------------------
 
 export const dashboardRoutes = [
-  {
-    path: 'dashboarduser',
-    element: (
-      <AuthGuard>
-        <Suspense fallback={<LoadingScreen />}>
-          <DashboardUser />
-        </Suspense>
-      </AuthGuard>
-    ),
-  },
-
   {
     path: 'dashboard',
     element: (
@@ -150,6 +138,7 @@ export const dashboardRoutes = [
         children: [
           { element: <FileManagerPage />, index: true },
           { path: 'info/:id', element: <FIleManagerDetail /> },
+          { path: 'infosubfolder/:id', element: <FIleManagerDetail /> },
         ],
       },
       // { path: 'mail', element: <MailPage /> },

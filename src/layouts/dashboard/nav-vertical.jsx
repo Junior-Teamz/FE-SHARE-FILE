@@ -16,8 +16,9 @@ import { NavSectionVertical } from 'src/components/nav-section';
 //
 import { NAV } from '../config-layout';
 import { useNavData } from './config-navigation';
-import { NavToggleButton} from '../_common';
+import { NavToggleButton } from '../_common';
 
+import Kemen from '../../../public/logo/kemen3.png';
 // ----------------------------------------------------------------------
 
 export default function NavVertical({ openNav, onCloseNav }) {
@@ -47,7 +48,19 @@ export default function NavVertical({ openNav, onCloseNav }) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4, mb: 1 }} />
+      <Box
+        component="img"
+        src={Kemen}
+        alt="Kemenkop"
+        sx={{
+          width: { xs: 250, md: 300 }, // Lebar maksimum untuk responsivitas
+          maxWidth: '100%', // Menjaga agar lebar tidak melebihi kontainer
+          height: 'auto', // Agar proporsional
+          objectFit: 'contain', // Menjaga gambar tetap dalam batas tanpa dipotong
+          mt: -10,
+          mb: { xs: -8, md: -12 }, // Jarak bawah untuk responsivitas
+        }}
+      />
 
       <NavSectionVertical
         data={navData}

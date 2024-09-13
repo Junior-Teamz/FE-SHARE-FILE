@@ -250,6 +250,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
         open={details.value}
         onClose={details.onFalse}
         onDelete={onDeleteRow}
+        
       />
 
       <FileManagerShareDialog

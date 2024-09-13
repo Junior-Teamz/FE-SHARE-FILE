@@ -38,20 +38,17 @@ export default function FileManagerFileDetails({
   onDelete,
   ...other
 }) {
-  const { name, size, url, type, shared, modifiedAt } = item;
+  const { name, size, url, type, shared, modifiedAt, user, instance } = item;
 
   const items = item?.tags?.map((tag) => tag.name);
 
   const hasShared = shared && !!shared.length;
 
   const toggleTags = useBoolean(true);
-
   const share = useBoolean();
-
   const properties = useBoolean(true);
 
   const [inviteEmail, setInviteEmail] = useState('');
-
   const [tags, setTags] = useState(items);
 
   const handleChangeInvite = useCallback((event) => {
@@ -105,7 +102,7 @@ export default function FileManagerFileDetails({
               />
             ))
           }
-          renderInput={(params) => <TextField {...params} placeholder="#Add a tags" />}
+          renderInput={(params) => <TextField {...params} placeholder="#Add a tag" />}
         />
       )}
     </Stack>
@@ -157,7 +154,7 @@ export default function FileManagerFileDetails({
   const renderShared = (
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ p: 2.5 }}>
-        <Typography variant="subtitle2"> File Share With </Typography>
+        <Typography variant="subtitle2"> File Shared With </Typography>
 
         <IconButton
           size="small"
@@ -222,13 +219,13 @@ export default function FileManagerFileDetails({
               bgcolor: 'background.neutral',
             }}
           >
+            {/* Uncomment and use for displaying file thumbnail if needed */}
             {/* <FileThumbnail
               imageView
               file={type === 'folder' ? type : url}
               sx={{ width: 64, height: 64 }}
               imgSx={{ borderRadius: 1 }}
             /> */}
-            {/* DISINI URL KE IMAGE SUPAYA NAMPIL */}
 
             <Typography variant="subtitle1" sx={{ wordBreak: 'break-all' }}>
               {name}
@@ -239,46 +236,68 @@ export default function FileManagerFileDetails({
             {renderTags}
 
             {renderProperties}
+
+            {/* User and Instances Information */}
+            <Stack spacing={1.5}>
+              <Stack direction="row" alignItems="center" sx={{ typography: 'subtitle2' }}>
+                Owner
+              </Stack>
+              <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize' }}>
+                <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
+                  Name
+                </Box>
+                {user?.name}
+              </Stack>
+
+              {/* <Stack direction="row" sx={{ typography: 'caption', textTransform: 'capitalize' }}>
+                <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
+                  Email
+                </Box>
+                {user?.email}
+              </Stack> */}
+
+              <Stack direction="row" alignItems="center" sx={{ typography: 'subtitle2' }}>
+                Instansi
+              </Stack>
+              {instance && instance.length > 0 ? (
+                instance.map((instanceItem) => (
+                  <Stack
+                    direction="row"
+                    key={instanceItem.id}
+                    sx={{ typography: 'caption', textTransform: 'capitalize' }}
+                  >
+                    <Box component="span" sx={{ width: 50, color: 'text.secondary', mr: 2 }}>
+                      {instanceItem?.name}
+                    </Box>
+                  </Stack>
+                ))
+              ) : (
+                <Typography>Tidak ada instansi</Typography>
+              )}
+            </Stack>
+
+            {renderShared}
           </Stack>
 
-          {renderShared}
+          <FileManagerShareDialog
+            open={share.value}
+            onClose={share.onFalse}
+            inviteEmail={inviteEmail}
+            onChangeInvite={handleChangeInvite}
+            onSendInvite={() => {}}
+          />
         </Scrollbar>
-
-        <Box sx={{ p: 2.5 }}>
-          <Button
-            fullWidth
-            variant="soft"
-            color="error"
-            size="large"
-            startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-            onClick={onDelete}
-          >
-            Delete
-          </Button>
-        </Box>
       </Drawer>
-
-      <FileManagerShareDialog
-        open={share.value}
-        shared={shared}
-        inviteEmail={inviteEmail}
-        onChangeInvite={handleChangeInvite}
-        onCopyLink={onCopyLink}
-        onClose={() => {
-          share.onFalse();
-          setInviteEmail('');
-        }}
-      />
     </>
   );
 }
 
 FileManagerFileDetails.propTypes = {
-  favorited: PropTypes.bool,
   item: PropTypes.object,
-  onClose: PropTypes.func,
-  onCopyLink: PropTypes.func,
-  onDelete: PropTypes.func,
-  onFavorite: PropTypes.func,
   open: PropTypes.bool,
+  favorited: PropTypes.bool,
+  onFavorite: PropTypes.func,
+  onCopyLink: PropTypes.func,
+  onClose: PropTypes.func,
+  onDelete: PropTypes.func,
 };

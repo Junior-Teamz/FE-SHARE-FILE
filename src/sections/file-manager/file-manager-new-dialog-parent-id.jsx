@@ -12,7 +12,6 @@ import Dialog from '@mui/material/Dialog';
 import Iconify from 'src/components/iconify';
 import { Upload } from 'src/components/upload';
 import { enqueueSnackbar } from 'notistack';
-import { useForm } from 'react-hook-form';
 import { useMutationUploadFilesId } from './view/folderDetail/useMutationUploadFilesId';
 
 // ----------------------------------------------------------------------
@@ -28,6 +27,7 @@ export default function FileManagerNewDialogParent({
   //
   folderName,
   onChangeFolderName,
+  refetch, // Added refetch function
   ...other
 }) {
   const [files, setFiles] = useState([]);
@@ -56,6 +56,7 @@ export default function FileManagerNewDialogParent({
       enqueueSnackbar('Files Uploaded Successfully');
       handleRemoveAllFiles();
       onClose();
+      refetch?.(); // Call refetch after successful upload
     },
     onError: (error) => {
       enqueueSnackbar(error.message, { variant: 'error' });
@@ -67,18 +68,17 @@ export default function FileManagerNewDialogParent({
       enqueueSnackbar('Please select files to upload', { variant: 'warning' });
       return;
     }
-
+  
     const formData = new FormData();
-    // If uploading a single file
-    formData.append('file', files[0]);
     formData.append('folder_id', id);
-    // For multiple files, you may need to loop over them, but based on your comment,
-    // files.forEach((file) => {
-    //   formData.append('file', file);
-    // });
-    // Trigger file upload via useMutation
+  
+    files.forEach((file) => {
+      formData.append('file[]', file); // Use 'file[]' to handle multiple files on the server-side
+    });
+  
     UploadFiles(formData);
   };
+  
 
   const handleRemoveFile = (inputFile) => {
     const filtered = files.filter((file) => file !== inputFile);
@@ -144,4 +144,5 @@ FileManagerNewDialogParent.propTypes = {
   onUpdate: PropTypes.func,
   open: PropTypes.bool,
   title: PropTypes.string,
+  refetch: PropTypes.func, // Added prop type for refetch function
 };

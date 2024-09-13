@@ -9,6 +9,7 @@ import { authRoutes } from './auth';
 import { authDemoRoutes } from './auth-demo';
 import { dashboardRoutes } from './dashboard';
 import { componentsRoutes } from './components';
+import {DashboardUser} from './User/DashboardUser';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +39,7 @@ export default function Router() {
 
     // Dashboard routes
     ...dashboardRoutes,
+    ...DashboardUser,
 
     // Main routes
     ...mainRoutes,
