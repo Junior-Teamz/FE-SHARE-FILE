@@ -42,10 +42,7 @@ import { Box, Stack } from '@mui/system';
 import FileRecentItem from 'src/sections/file-manager/file-recent-item';
 import { Link } from 'react-router-dom';
 import { AuthContext } from 'src/auth/context/jwt/auth-context';
-import axiosInstance from 'src/utils/axios';
-import FileManagerFolderItem from 'src/sections/file-manager/file-manager-folder-item';
-import FileManagerTable from 'src/sections/file-manager/file-manager-table';
-import { table } from 'src/theme/overrides/components/table';
+
 export default function OverviewAppView() {
   const { user } = useContext(AuthContext);
   const theme = useTheme();
@@ -246,7 +243,7 @@ export default function OverviewAppView() {
           />
         </Grid> */}
 
-        {/* <Grid xs={12} md={4} sx={{ paddingBottom: '20px' }}>
+        {/*f <Grid xs={12} md={4} sx={{ paddingBottom: '20px' }}>
           <AppWidgetSummary
             title="Total Downloads"
             percent={-0.1}
@@ -321,6 +318,49 @@ export default function OverviewAppView() {
               onOpen={handleClickOpened}
               sx={{ mt: 5 }}
             />
+            <Dialog open={opened} onClose={handleClosed}>
+              <DialogTitle>Create Folder</DialogTitle>
+              <DialogContent>
+                <form onSubmit={handleSubmit(Onsubmit)}>
+                  <DialogContentText sx={{ mb: 3 }}>
+                    Silahkan masukkan nama folder yang ingin dibuat disini.
+                  </DialogContentText>
+                  <Stack spacing={2}>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      name="name"
+                      label="Nama Folder"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      {...register('name')}
+                    />
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      name="tags"
+                      label="Tags"
+                      type="text"
+                      fullWidth
+                      variant="outlined"
+                      value={tagsInput} // Bind the tags input string
+                      onChange={handleTagsChange}
+                    />
+                  </Stack>
+                  <DialogActions>
+                    <Button variant="outlined" onClick={handleClosed}>
+                      Cancel
+                    </Button>
+                    <Button variant="outlined" type="submit">
+                      {isPending ? 'Creating...' : 'Create'}
+                    </Button>
+                  </DialogActions>
+                </form>
+              </DialogContent>
+            </Dialog>
             <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
               <DialogTitle>Edit Folder</DialogTitle>
               <DialogContent>
@@ -375,47 +415,7 @@ export default function OverviewAppView() {
                 </Button>
               </DialogActions>
             </Dialog>
-            <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-              <DialogTitle>Edit Folder</DialogTitle>
-              <DialogContent>
-                <form onSubmit={handleSubmit(handleEditSubmit)}>
-                  <DialogContentText sx={{ mb: 3 }}>
-                    Silahkan masukkan nama folder yang ingin diubah disini.
-                  </DialogContentText>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    name="name"
-                    label="Nama Folder"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    {...register('name')}
-                  />
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    name="tags"
-                    label="Tags"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={tagsInput} // Bind the tags input string
-                    onChange={handleTagsChange}
-                  />
-                  <DialogActions>
-                    <Button variant="outlined" onClick={handleEditDialogClose}>
-                      Cancel
-                    </Button>
-                    <Button variant="outlined" type="submit">
-                      {loadingEditFolder ? 'Editing' : 'Edit'}
-                    </Button>
-                  </DialogActions>
-                </form>
-              </DialogContent>
-            </Dialog>
+
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>

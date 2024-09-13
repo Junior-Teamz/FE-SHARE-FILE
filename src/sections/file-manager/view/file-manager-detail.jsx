@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useFetchDetail } from './folderDetail';
 import { Typography } from '@mui/material';
 import { Box, Container, Stack } from '@mui/system';
@@ -16,27 +16,23 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
+import { enqueueSnackbar } from 'notistack';
+import InfoIcon from '@mui/icons-material/Info';
 
 export const FIleManagerDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data, isLoading, refetch } = useFetchDetail(id);
 
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
   const [openCreateFolderDialog, setOpenCreateFolderDialog] = useState(false);
   const [folderName, setFolderName] = useState('');
   const [tagsInput, setTagsInput] = useState('');
-  const [folderPath, setFolderPath] = useState('');
 
-  useEffect(() => {
-    if (data) {
-      setFolderPath((prevPath) =>
-        prevPath ? `${prevPath} / ${data.folder_info.name}` : data.folder_info.name
-      );
-    }
-  }, [id, data]);
-
+  // Mutation hook untuk membuat folder
   const { mutate: createFolder, isLoading: isCreating } = useMutationFolder({
     onSuccess: () => {
+      enqueueSnackbar('Folder Berhasil Dibuat', { variant: 'success' });
       refetch();
       setOpenCreateFolderDialog(false);
       setFolderName('');
@@ -44,9 +40,11 @@ export const FIleManagerDetail = () => {
     },
     onError: (error) => {
       console.error('Error creating folder:', error);
+      enqueueSnackbar('Folder Gagal Dibuat', { variant: 'error' });
     },
   });
 
+  // Handle folder creation
   const handleFolderCreate = () => {
     const tagsArray = tagsInput
       .split(',')
@@ -61,21 +59,25 @@ export const FIleManagerDetail = () => {
     createFolder(folderData);
   };
 
-  const handleOpenUploadDialog = () => {
-    setOpenUploadDialog(true);
+  // Handle dialog open/close
+  const handleOpenUploadDialog = () => setOpenUploadDialog(true);
+  const handleCloseUploadDialog = () => setOpenUploadDialog(false);
+  const handleOpenCreateFolderDialog = () => setOpenCreateFolderDialog(true);
+  const handleCloseCreateFolderDialog = () => setOpenCreateFolderDialog(false);
+
+  // Handle folder navigation
+  const handleSubfolderClick = (folder_Id) => {
+    // Navigate to the subfolder, replacing the current URL
+    navigate(`/dashboard/file-manager/info/${folder_Id}`, { replace: true });
+    console.log('navigate to :', folder_Id);
   };
 
-  const handleCloseUploadDialog = () => {
-    setOpenUploadDialog(false);
-  };
-
-  const handleOpenCreateFolderDialog = () => {
-    setOpenCreateFolderDialog(true);
-  };
-
-  const handleCloseCreateFolderDialog = () => {
-    setOpenCreateFolderDialog(false);
-  };
+  // Load data on component mount or ID change
+  useEffect(() => {
+    if (id) {
+      refetch(); // Fetch data when ID changes
+    }
+  }, [id, refetch]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -85,16 +87,18 @@ export const FIleManagerDetail = () => {
     <>
       <Container>
         <Box sx={{ my: 5 }}>
-          <Typography variant="h6">Folder Saya &raquo; {folderPath}</Typography>
-          <Button variant="contained" onClick={handleOpenCreateFolderDialog}>
-            Create New Folder
-          </Button>
+          <Typography variant="h6" >
+            Folder Saya &raquo; {data.folder_info.name} <InfoIcon fontSize="medium" sx={{mt:3,}}/>
+          </Typography>
         </Box>
 
         {data.subfolders.length === 0 && data.files.length === 0 ? (
           <>
+            <Button variant="contained" onClick={handleOpenCreateFolderDialog}>
+              Create New Folder
+            </Button>
             <FileManagerPanel
-              title="Files"
+              title="Upload Files"
               link={paths.dashboard.fileManager}
               onOpen={handleOpenUploadDialog}
               sx={{ mt: 5 }}
@@ -103,29 +107,29 @@ export const FIleManagerDetail = () => {
           </>
         ) : (
           <>
+            <Button variant="contained" onClick={handleOpenCreateFolderDialog}>
+              Create New Folder
+            </Button>
             <FileManagerPanel
-              title="Files"
+              title="Upload Files"
               link={paths.dashboard.fileManager}
               onOpen={handleOpenUploadDialog}
               sx={{ mt: 5 }}
             />
-            {data.subfolders.length > 0 && (
-              <Box sx={{ mt: 5 }}>
-                <Typography variant="h6">Subfolders</Typography>
-                <Stack spacing={2}>
-                  {data.subfolders.map((folder) => (
-                    <Link key={folder.folder_id} to={`file-manager/infosubfolder/${folder.folder_id}`}>
-                      <FileRecentItem
-                        file={{ ...folder, type: 'folder' }}
-                        onDelete={() => console.info('DELETE', folder.folder_id)}
-                      />
-                    </Link>
-                  ))}
-                </Stack>
-              </Box>
-            )}
+
+            <Typography sx={{ mb: 2, mt: 10 }}>Subfolders</Typography>
+            {data.subfolders.map((folder) => (
+              <div key={folder.id} onClick={() => handleSubfolderClick(folder.id)}>
+                <FileRecentItem
+                  file={{ ...folder, type: 'folder' }}
+                  onDelete={() => console.info('DELETE', folder.id)}
+                />
+              </div>
+            ))}
+
             {data.files.length > 0 && (
               <Stack spacing={2} sx={{ mt: 5 }}>
+                <Typography sx={{ mb: 2, mt: 5 }}>Files</Typography>
                 {data.files.map((file) => (
                   <FileRecentItem
                     key={file.id}
@@ -182,7 +186,7 @@ export const FIleManagerDetail = () => {
 
       {/* Upload Files Dialog */}
       <FileManagerNewDialogParent
-        id={id}
+        id={id} // Use the current folder ID
         title="Upload Files"
         open={openUploadDialog}
         onClose={handleCloseUploadDialog}
