@@ -53,18 +53,15 @@ export default function JwtLoginView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-
       const response = await login?.(data.email, data.password);
       // console.log('Login Response:', response);
-      const userRoles = response?.roles; 
-      const isSuperadmin = response?.is_superadmin ?? false; 
+      const userRoles = response?.roles;
+      const isSuperadmin = response?.is_superadmin ?? false;
       // console.log('User Roles:', userRoles);
 
       if (userRoles?.includes('admin') || isSuperadmin) {
- 
         router.push('/dashboard');
       } else if (userRoles?.includes('user')) {
-  
         router.push('/dashboarduser');
       } else {
         enqueueSnackbar('Role tidak dikenal!', { variant: 'error' });
