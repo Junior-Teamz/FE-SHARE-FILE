@@ -4,7 +4,7 @@ import { useTheme, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
+
 import Typography from '@mui/material/Typography';
 // hooks
 import { useResponsive } from 'src/hooks/use-responsive';
@@ -15,6 +15,7 @@ import { paths } from 'src/routes/paths';
 // components
 import Iconify from 'src/components/iconify';
 import { MotionViewport, varFade } from 'src/components/animate';
+import Grid from '@mui/system/Unstable_Grid/Grid';
 
 // ----------------------------------------------------------------------
 

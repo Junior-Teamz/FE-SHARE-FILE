@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/system/Unstable_Grid/Grid';
 import Typography from '@mui/material/Typography';
 // hooks
 import { useMockedUser } from 'src/hooks/use-mocked-user';

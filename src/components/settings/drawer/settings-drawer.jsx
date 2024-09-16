@@ -67,7 +67,7 @@ export default function SettingsDrawer() {
       <BaseOptions
         value={settings.themeMode}
         onChange={(newValue) => settings.onUpdate('themeMode', newValue)}
-        options={['light', 'dark']}
+        options={['light']}//'dark'
         icons={['sun', 'moon']}
       />
     </div>

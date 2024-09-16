@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/system/Unstable_Grid/Grid';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 // hooks
@@ -74,20 +74,16 @@ export default function AboutWhat() {
         )}
 
         <Grid xs={12} md={6} lg={5}>
-          <m.div variants={varFade().inUp}>
-            <Typography variant="h2" sx={{ mb: 3 }}>
-              Apa Itu File Sharing?
-            </Typography>
-          </m.div>
+          <Stack spacing={2} display="inline-flex" direction="row" sx={{ color: 'common.white', mb:4, mt: 4, }}>
+            <TextAnimate text="Apa" />
+            <TextAnimate text="Itu" />
+            <TextAnimate text="File Sharing?" variants={varFade().inUp} sx={{ color: 'primary.main' }} />
+          </Stack>
 
           <m.div variants={varFade().inUp}>
-            <Typography
-              sx={{
-                color: theme.palette.mode === 'light' ? 'text.secondary' : 'common.white',
-              }}
-            >
-              File sharing adalah platform yang memungkinkan pengguna berbagi dan mentransfer
-              file antar perangkat atau pengguna melalui jaringan. Dengan aplikasi ini, file seperti
+            <Typography>
+              File sharing adalah platform yang memungkinkan pengguna berbagi dan mentransfer file
+              antar perangkat atau pengguna melalui jaringan. Dengan aplikasi ini, file seperti
               dokumen, gambar, dan video dapat diakses dan dibagikan dengan mudah, mendukung
               kolaborasi jarak jauh
             </Typography>
@@ -129,5 +125,26 @@ export default function AboutWhat() {
       </Grid>
     </Container>
     // </Box>
+  );
+}
+
+function TextAnimate({ text, variants, sx, ...other }) {
+  return (
+    <Box
+      component={m.div}
+      sx={{
+        typography: 'h3',
+        overflow: 'hidden',
+        display: 'inline-flex',
+        ...sx,
+      }}
+      {...other}
+    >
+      {text.split('').map((letter, index) => (
+        <m.span key={index} variants={variants || varFade().inUp}>
+          {letter}
+        </m.span>
+      ))}
+    </Box>
   );
 }

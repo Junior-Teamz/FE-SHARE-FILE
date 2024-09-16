@@ -139,9 +139,9 @@ export default function JwtLoginView() {
   );
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
-      {renderHead}
-      {renderForm}
-    </FormProvider>
+    <FormProvider methods={methods} onSubmit={onSubmit} sx={{ background: 'linear-gradient(196deg, #2c7810, #2b9c1f, #24c22f, #08e93f)', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    {renderHead}
+    {renderForm}
+  </FormProvider>
   );
 }

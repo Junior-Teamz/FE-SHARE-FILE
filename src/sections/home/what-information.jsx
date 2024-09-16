@@ -2,7 +2,7 @@ import { m } from 'framer-motion';
 // @mui
 import { alpha, useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/system/Unstable_Grid/Grid';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -39,7 +39,6 @@ export default function InformationAndAnnouncements() {
     >
       {/* Grid untuk Informasi */}
       <Grid container columnSpacing={{ md: 3 }} sx={{ mb: 5 }}>
-
         <Grid xs={12} md={6} lg={5}>
           <m.div variants={varFade().inUp}>
             <Typography variant="h2" sx={{ mb: 3 }}>

@@ -6,7 +6,6 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
@@ -16,6 +15,9 @@ import { _socials } from 'src/_mock';
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
 import Kemen from '../../../public/logo/kemen3.png';
+import Grid from '@mui/system/Unstable_Grid/Grid';
+
+import Overlay from '../../../public/assets/background/kemenkopoverlay.jpg' ;
 
 const LINKS = [
   {
@@ -49,15 +51,18 @@ export default function Footer() {
       sx={{
         position: 'relative',
         bgcolor: 'background.default',
-        mt: 3,
         width: '100%',
+        backgroundImage: `url(${Overlay})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
       }}
     >
       <Divider />
 
       <Container
         sx={{
-          pt: 10,
+          pt: 5,
           pb: 5,
           textAlign: { xs: 'center', md: 'unset' },
         }}
@@ -97,7 +102,7 @@ export default function Footer() {
                 mx: { xs: 'auto', md: 'unset' },
               }}
             >
-             Berbagi file dengan cepat dan praktis, kapan saja!
+              Berbagi file dengan cepat dan praktis, kapan saja!
             </Typography>
 
             <Stack
@@ -166,3 +171,4 @@ export default function Footer() {
 
   return mainFooter;
 }
+
