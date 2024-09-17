@@ -28,6 +28,7 @@ export default function HomeAdvertisement() {
           md: 'left',
         },
         flex: 1, // Memberikan ruang lebih kecil untuk deskripsi
+      
       }}
     >
       <Box
@@ -92,7 +93,7 @@ export default function HomeAdvertisement() {
   );
 
   return (
-    <Container component={MotionViewport}>
+    <Container sx={{  mt: 10, mb:  5,}} component={MotionViewport}>
       <Stack
         alignItems="center"
         direction={{ xs: 'column', md: 'row' }}

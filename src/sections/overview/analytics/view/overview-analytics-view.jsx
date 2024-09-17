@@ -1,5 +1,5 @@
 // @mui
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/system/Unstable_Grid/Grid';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 // _mock
@@ -164,7 +164,7 @@ export default function OverviewAnalyticsView() {
             }}
           />
         </Grid>
-{/* 
+        {/* 
         <Grid xs={12} md={6} lg={8}>
           <AnalyticsNews title="News" list={_analyticPosts} />
         </Grid>
@@ -176,7 +176,7 @@ export default function OverviewAnalyticsView() {
         <Grid xs={12} md={6} lg={4}>
           <AnalyticsTrafficBySite title="Traffic by Site" list={_analyticTraffic} />
         </Grid> */}
-{/* 
+        {/* 
         <Grid xs={12} md={6} lg={8}>
           <AnalyticsTasks title="Tasks" list={_analyticTasks} />
         </Grid> */}

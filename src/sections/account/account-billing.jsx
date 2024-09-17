@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/system/Unstable_Grid/Grid';
 
 //
 import AccountBillingPlan from './account-billing-plan';

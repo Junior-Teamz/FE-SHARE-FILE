@@ -41,9 +41,11 @@ export default function FaqsHero() {
             textAlign: { xs: 'center', md: 'unset' },
           }}
         >
-          <div>
-            <TextAnimate text="FAQ" sx={{ color: 'primary.main',  }} variants={varFade().inRight} />
-          </div>
+          <TextAnimate
+            text="FAQ"
+            sx={{ color: 'primary.main', textAlign: 'center' }}
+            variants={varFade().inUp}
+          />
 
           {/* <m.div variants={varFade().in}>
             <TextField

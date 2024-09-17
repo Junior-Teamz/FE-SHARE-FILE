@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
+
 import Typography from '@mui/material/Typography';
 // routes
 import { paths } from 'src/routes/paths';
@@ -23,6 +23,7 @@ import Iconify from 'src/components/iconify';
 import { RouterLink } from 'src/routes/components';
 import { MotionContainer, varFade } from 'src/components/animate';
 import PeopleIcon from '@mui/icons-material/People';
+import Grid from '@mui/system/Unstable_Grid/Grid';
 
 // ----------------------------------------------------------------------
 

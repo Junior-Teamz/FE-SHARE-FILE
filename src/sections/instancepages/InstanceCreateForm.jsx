@@ -7,7 +7,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/system/Unstable_Grid/Grid';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { useCreateInstance } from './view/Instance'; // Pastikan hook ini sudah benar
 import { Button } from '@mui/material';
@@ -32,7 +32,7 @@ export default function InstanceCreateForm() {
   // Validasi menggunakan Yup
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').max(100, 'Name must be at most 100 characters'),
-  
+
     address: Yup.string()
       .required('Address is required')
       .max(100, 'Address must be at most 100 characters'),
@@ -42,7 +42,7 @@ export default function InstanceCreateForm() {
     resolver: yupResolver(NewUserSchema),
     defaultValues: {
       name: '',
-  
+
       address: '',
     },
   });
